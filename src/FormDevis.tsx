@@ -211,12 +211,12 @@ export const FormDevis: React.FC = () => {
   return (
     <>
       <div className="flex flex-col items-center">
-        <form className="text-xl w-4/5 p-3">
+        <form className="w-4/5 p-3 text-xl">
           <div className="my-3">
             <label htmlFor="objetDevis">Objet Devis</label>
             <Input id="objetDevis" {...register("objetDevis")} />
             {errors.objetDevis && (
-              <p className="text-red-500 text-sm">
+              <p className="text-sm text-red-500">
                 {errors.objetDevis.message}
               </p>
             )}
@@ -226,7 +226,7 @@ export const FormDevis: React.FC = () => {
             <label htmlFor="nomAffaire">Nom Affaire</label>
             <Input id="nomAffaire" {...register("nomAffaire")} />
             {errors.nomAffaire && (
-              <p className="text-red-500 text-sm">
+              <p className="text-sm text-red-500">
                 {errors.nomAffaire.message}
               </p>
             )}
@@ -236,13 +236,13 @@ export const FormDevis: React.FC = () => {
             <label htmlFor="client">Client</label>
             <Input id="client" {...register("client")} />
             {errors.client && (
-              <p className="text-red-500 text-sm">{errors.client.message}</p>
+              <p className="text-sm text-red-500">{errors.client.message}</p>
             )}
           </div>
 
           <div className="mt-5">
-            <table className="w-full text-left border rounded-t-xl overflow-hidden">
-              <thead className="bg-lime-600 text-white text-xl">
+            <table className="w-full overflow-hidden text-left border rounded-t-xl">
+              <thead className="text-xl text-white bg-lime-600">
                 <tr>
                   <th className="p-3">Désignation</th>
                   <th>Qté</th>
@@ -267,7 +267,7 @@ export const FormDevis: React.FC = () => {
                 </TextClickable>
               </tbody>
             </table>
-            <div className="w-full flex justify-end">
+            <div className="flex justify-end w-full">
               <TabFooter
                 TabValues={TabValues}
                 onFooterValuesChange={setFooterValues}
@@ -278,7 +278,7 @@ export const FormDevis: React.FC = () => {
           </div>
         </form>
 
-        <div className="pdfView rounded-3xl overflow-hidden my-5 w-1/2 h-screen ">
+        <div className="w-1/2 h-screen my-5 overflow-hidden pdfView rounded-3xl ">
           <PDFViewer className="w-full h-full over">
             <MyDocument
               data={{
@@ -304,7 +304,7 @@ const TextClickable: React.FC<{
   return (
     <button
       onClick={textOnClick}
-      className="m-auto w-fit focus:outline-lime-700 outline-offset-2 text-xl my-3 font-medium text-lime-600"
+      className="m-auto my-3 text-xl font-medium w-fit focus:outline-lime-700 outline-offset-2 text-lime-600"
     >
       {children}
     </button>
@@ -425,7 +425,7 @@ const LigneTab: React.FC<{
         />
         %
       </td>
-      <td className="somme max-w-10 overflow-hidden text-nowrap">
+      <td className="overflow-hidden somme max-w-10 text-nowrap">
         {calculateTotal()} €
       </td>
     </tr>
@@ -476,15 +476,15 @@ const TabFooter: React.FC<{
   }, [totalHT, netAPayer, onFooterValuesChange]);
 
   return (
-    <div className="flex w-full justify-between">
-      <div className="border border-slate-200 rounded-lg w-1/3 p-3 h-fit mt-5">
+    <div className="flex justify-between w-full">
+      <div className="w-1/3 p-3 mt-5 border rounded-lg border-slate-200 h-fit">
         <h1 className="mb-2">Paiements</h1>
-        <div className="flex flex-col items-center border border-slate-200 rounded-lg p-2 mb-3">
+        <div className="flex flex-col items-center p-2 mb-3 border rounded-lg border-slate-200">
           <div className="flex">
             <img src="./src/assets/banque.png" className="my-auto size-6" />
             <p className="flex justify-center gap-5 p-2">Virement bancaire</p>
           </div>
-          <div className="pl-20 w-full">
+          <div className="w-full pl-20">
             <label className="block" htmlFor="iban">
               IBAN
             </label>
@@ -497,7 +497,7 @@ const TabFooter: React.FC<{
             />
           </div>
         </div>
-        <div className="flex flex-col items-center border border-slate-200 rounded-lg p-2 mb-3">
+        <div className="flex flex-col items-center p-2 mb-3 border rounded-lg border-slate-200">
           <div className="flex">
             <img
               src="./src/assets/cheque-bancaire.png"
@@ -505,7 +505,7 @@ const TabFooter: React.FC<{
             />
             <p className="flex justify-center gap-5 p-2">À l'ordre de</p>
           </div>
-          <div className="pl-20 w-full">
+          <div className="w-full pl-20">
             <label className="block" htmlFor="companyName">
               Nom de l'entreprise
             </label>
@@ -521,15 +521,15 @@ const TabFooter: React.FC<{
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-1/3 justify borde rounded-lg mt-3">
-        <ul className="flex justify-between border border-slate-200 rounded-t-lg p-2">
+      <div className="flex flex-col w-1/3 mt-3 rounded-lg justify borde">
+        <ul className="flex justify-between p-2 border rounded-t-lg border-slate-200 ">
           <li>Total HT</li>
           <li>{totalHT} €</li>
         </ul>
         {TabValues.map((value, index) => (
           <ul
             key={index}
-            className="flex justify-between border border-slate-200 p-2"
+            className="flex justify-between p-2 border border-slate-200"
           >
             <li>TVA {value.tva}%</li>
             <li>
@@ -537,11 +537,11 @@ const TabFooter: React.FC<{
             </li>
           </ul>
         ))}
-        <ul className="flex justify-between border border-slate-200 p-2 font-bold">
+        <ul className="flex justify-between p-2 font-bold border border-slate-200">
           <li className="font-bold">Total TTC </li>
           <li>{netAPayer} €</li>
         </ul>
-        <ul className="flex justify-between w-full text-white p-2 rounded-b-lg bg-lime-600 font-bold">
+        <ul className="flex justify-between w-full p-2 font-bold text-white rounded-b-lg bg-lime-600">
           <li>Net à payer</li>
           <li>{netAPayer} €</li>
         </ul>

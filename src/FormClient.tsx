@@ -57,9 +57,9 @@ export const FormClient: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="flex flex-col items-center w-full">
       <form
-        className="bg-white m-8 w-1/3 p-4 rounded-md border border-zinc-300"
+        className="w-1/3 p-4 m-8 bg-white border rounded-md border-zinc-300"
         onSubmit={handleSubmit(onSubmit)}
       >
         <Titre>Ajouter un client</Titre>
@@ -128,7 +128,7 @@ export const FormClient: React.FC = () => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    className="focus:outline-lime-700 outline-offset-2 block w-full p-2 border rounded-md text-xl"
+                    className="block w-full p-2 text-xl border rounded-md focus:outline-lime-700 outline-offset-2"
                   >
                     <option className="text-gray-400" value="" disabled>
                       Civilité
@@ -151,7 +151,7 @@ export const FormClient: React.FC = () => {
                 render={({ field }) => <Input {...field} placeholder="Nom" />}
               />
               <Button
-                className="focus:outline-lime-700 outline-offset-2 w-fit flex items-center text-center justify-center border border-lime-600 text-xl bg-white rounded-lg group hover:bg-lime-500 transition ease-in-out"
+                className="flex items-center justify-center text-xl text-center transition ease-in-out bg-white border rounded-lg focus:outline-lime-700 outline-offset-2 w-fit border-lime-600 group hover:bg-lime-500"
                 onClick={() => remove(index)}
                 type="button"
               >
@@ -200,7 +200,7 @@ export const FormClient: React.FC = () => {
           </TextClickable>
 
           <Button
-            className="focus:outline-lime-600 outline-offset-2 border-4 border-lime-600 hover:text-white hover:bg-lime-600 transition ease-in-out text-2xl text-lime-600 font-medium p-1 m-3 rounded-md"
+            className="p-1 m-3 text-2xl font-medium transition ease-in-out border-4 rounded-md focus:outline-lime-600 outline-offset-2 border-lime-600 hover:text-white hover:bg-lime-600 text-lime-600"
             type="submit"
           >
             Créer le contact
@@ -213,12 +213,12 @@ export const FormClient: React.FC = () => {
 
 // Composant pour le titre
 const Titre: React.FC<{ children: string }> = ({ children }) => {
-  return <h1 className="my-3 font-bold text-2xl">{children}</h1>;
+  return <h1 className="my-3 text-2xl font-bold">{children}</h1>;
 };
 
 // Composant pour les sous-titres
 const H1: React.FC<{ children: string }> = ({ children }) => {
-  return <h1 className="my-2 font-semibold text-xl">{children}</h1>;
+  return <h1 className="my-2 text-xl font-semibold">{children}</h1>;
 };
 
 // Composant pour les champs de saisie
@@ -236,7 +236,7 @@ const Input: React.FC<{
       onChange={onChange}
       placeholder={placeholder || children}
       type="text"
-      className="pl-2 focus:outline-lime-700 outline-offset-2 border w-full overflow-hidden text-xl h-12 rounded-lg"
+      className="w-full h-12 pl-2 overflow-hidden text-xl border rounded-lg focus:outline-lime-700 outline-offset-2"
     />
   );
 };
@@ -288,7 +288,7 @@ const PhoneNumberInput: React.FC<{
     <div className="flex items-center w-full my-2">
       <div className="flex items-center">
         <select
-          className="border focus:outline-lime-700 outline-offset-2 rounded-l-lg pl-2 pr-8 h-12 text-xl bg-white"
+          className="h-12 pl-2 pr-8 text-xl bg-white border rounded-l-lg focus:outline-lime-700 outline-offset-2"
           value={countryCode}
           onChange={handleCountryChange}
         >
@@ -303,7 +303,7 @@ const PhoneNumberInput: React.FC<{
         name={name}
         type="text"
         placeholder="Numéro de téléphone"
-        className="pl-2 border focus:outline-lime-700 outline-offset-2 w-full overflow-hidden text-xl h-12 rounded-r-lg"
+        className="w-full h-12 pl-2 overflow-hidden text-xl border rounded-r-lg focus:outline-lime-700 outline-offset-2"
         value={phoneNumber}
         onChange={handleChange}
       />
@@ -319,7 +319,7 @@ const TextClickable: React.FC<{
   return (
     <button
       onClick={textOnClick}
-      className="m-auto w-fit focus:outline-lime-700 outline-offset-2 text-xl my-3 font-medium text-lime-600"
+      className="m-auto my-3 text-xl font-medium w-fit focus:outline-lime-700 outline-offset-2 text-lime-600"
     >
       {children}
     </button>
