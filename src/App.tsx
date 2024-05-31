@@ -6,6 +6,7 @@ function App() {
   return (
     <>
       <FormClient />
+      <FormClient />
       <FormDevis />
       <FormAvoir />
     </>
