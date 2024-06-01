@@ -7,7 +7,11 @@ function App() {
     <>
       <FormClient />
       <FormDevis />
+      <FormDevis />
       <FormAvoir />
+      <FormDevis />
+      <FormDevis />
+      <FormDevis />
     </>
   );
 }
