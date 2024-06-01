@@ -8,6 +8,7 @@ function App() {
       <FormClient />
       <FormClient />
       <FormDevis />
+      <FormDevis />
       <FormAvoir />
     </>
   );
