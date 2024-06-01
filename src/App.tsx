@@ -5,12 +5,11 @@ import FormDevis from "./FormDevis";
 function App() {
   return (
     <>
+      <h1>reset +1</h1>
       <FormClient />
-      <FormDevis />
-      <FormDevis />
+
       <FormAvoir />
-      <FormDevis />
-      <FormDevis />
+
       <FormDevis />
     </>
   );
