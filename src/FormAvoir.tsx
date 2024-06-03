@@ -108,27 +108,52 @@ export const FormAvoir: React.FC = () => {
     <Document>
       <Page style={tw("p-2 text-sans")} size="A4">
         <View style={tw("flex flex-row justify-between h-1/5")}>
-          <View>
+          <View style={tw("")}>
             <Image src="./src/assets/dcrrlogo.png" style={tw("w-44")} />
-            <Text style={tw("text-sm")}>
-              DCRR (Denquin & Ciatti Refrigeration Reglementary)
+            <Text style={tw("text-sm font-bold")}>
+              Denquin & Ciatti Refrigeration Reglementary
             </Text>
             <Text style={tw("text-sm")}>
-              Services et conseil aux entreprises
+              36 Avenue Adrien Raynal, 94310 - ORLY
             </Text>
+            <Text style={tw("text-sm")}>SAS au capital de 1000€</Text>
             <Link src="https://dcrr.fr/contact/" style={tw("text-sm")}>
               Contactez-nous
             </Link>
+            <View>
+              <Text style={tw("text-sm")}>
+                <Text style={tw("font-bold")}>RCS </Text>
+                Créteil B 951 054 394
+              </Text>
+              <Text style={tw("text-sm")}>
+                <Text style={tw("font-bold")}>APE </Text>
+                7120B
+              </Text>
+              <Text style={tw("text-sm")}>
+                <Text style={tw("font-bold text-red")}>SIRET </Text>
+                95105439400014
+              </Text>
+              <Text style={tw("text-sm")}>
+                <Text style={tw("font-bold ")}>TVA </Text>
+                FR53951054394
+              </Text>
+            </View>
           </View>
-          <View style={tw("flex flex-col")}>
-            <Text style={tw("text-sans text-2xl text-right")}>Avoir</Text>
-            <Text style={tw("inline text-right text-sm")}>
+          <View style={tw("flex flex-col item-end ")}>
+            <Text
+              style={tw(
+                "text-sans text-2xl text-right justify-end   block self-end"
+              )}
+            >
+              Avoir
+            </Text>
+            <Text style={tw("inline  text-sm self-end")}>
               Devis n° : {data.Devis}
             </Text>
-            <Text style={tw("text-right text-sm")}>
+            <Text style={tw("self-end text-sm")}>
               Nom de l'affaire : {data.nomAffaire}
             </Text>
-            <Text style={tw("text-right text-sm")}>Client : {data.client}</Text>
+            <Text style={tw("self-end text-sm")}>Client : {data.client}</Text>
           </View>
         </View>
         <View style={tw("mt-5")}>
@@ -200,7 +225,7 @@ export const FormAvoir: React.FC = () => {
     <>
       <div className="flex flex-col items-center">
         <form className="w-4/5 p-3 text-xl">
-          <div className="my-3">
+          <div className="my-3 ">
             <label htmlFor="objetDevis">ID du Devis</label>
             <Input id="objetDevis" {...register("Devis")} />
             {errors.Devis && (
@@ -477,17 +502,24 @@ const TabFooter: React.FC<{
           <li>Total HT</li>
           <li>{totalHT} €</li>
         </ul>
-        {TabValues.map((value, index) => (
-          <ul
-            key={index}
-            className="flex justify-between p-2 border border-slate-200"
-          >
-            <li>TVA {value.tva}%</li>
-            <li>
-              {calculateTvaAmount(value.tva, value.priceHT * value.quantity)} €
-            </li>
-          </ul>
-        ))}
+        {TabValues.map(
+          (value, index) =>
+            value.priceHT * value.quantity !== 0 && (
+              <ul
+                key={index}
+                className="flex justify-between p-2 border border-slate-200"
+              >
+                <li>TVA {value.tva}%</li>
+                <li>
+                  {calculateTvaAmount(
+                    value.tva,
+                    value.priceHT * value.quantity
+                  )}{" "}
+                  €
+                </li>
+              </ul>
+            )
+        )}
         <ul className="flex justify-between p-2 font-bold border border-slate-200">
           <li className="font-bold">Total TTC </li>
           <li>{netADeduire} €</li>
