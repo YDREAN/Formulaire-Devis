@@ -1,3 +1,4 @@
+import BonDeCommande from "./BonDeCommande";
 import { FormAvoir } from "./FormAvoir";
 import { FormClient } from "./FormClient";
 import FormDevis from "./FormDevis";
@@ -10,6 +11,7 @@ function App() {
       <FormAvoir />
 
       <FormDevis />
+      <BonDeCommande />
     </>
   );
 }
