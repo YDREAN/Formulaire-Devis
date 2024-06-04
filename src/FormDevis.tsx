@@ -314,7 +314,7 @@ export const FormDevis: React.FC = () => {
   );
 };
 
-const TextClickable: React.FC<{
+export const TextClickable: React.FC<{
   children: ReactNode;
   textOnClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }> = ({ children, textOnClick }) => {
