@@ -1,17 +1,9 @@
-import BonDeCommande from "./BonDeCommande";
-import { FormAvoir } from "./FormAvoir";
-import { FormClient } from "./FormClient";
-import FormDevis from "./FormDevis";
+import Acceuil from "./Acceuil";
 
 function App() {
   return (
     <>
-      <FormClient />
-
-      <FormAvoir />
-
-      <FormDevis />
-      <BonDeCommande />
+      <Acceuil />
     </>
   );
 }
