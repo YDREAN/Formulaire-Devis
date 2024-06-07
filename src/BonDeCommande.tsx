@@ -13,6 +13,9 @@ const BDCSchema = z.object({
   idBDC: z.string().min(1, "l'ID du Bon de commande est requis"),
   fournisseur: z.string().min(1, "Fournisseur est requis"),
   delaiPaiement: z.enum(["30 jours", "15 jours", "60 jours", "a réception"]),
+  dateLivraison: z.date({
+    required_error: "La date de livraison est requise.",
+  }),
 });
 
 // Définir le type basé sur le schéma de validation
@@ -272,7 +275,6 @@ export const BonDeCommande: React.FC = () => {
 
           <div className=" text-bold">
             <DatePickerDemo />
-
           </div>
 
           <div className="mt-5">
@@ -317,6 +319,7 @@ export const BonDeCommande: React.FC = () => {
           <PDFViewer className="w-full h-full over">
             <MyDocument
               data={{
+                dateLivraison: watch("dateLivraison"),
                 idBDC: watch("idBDC"),
                 fournisseur: watch("fournisseur"),
                 delaiPaiement: watch("delaiPaiement"),
