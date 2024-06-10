@@ -4,7 +4,7 @@ import FormDevis from "./FormDevis";
 function App() {
   return (
     <>
-      <FormDevis />
+      <Acceuil />
     </>
   );
 }

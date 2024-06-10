@@ -34,7 +34,8 @@ export const FormDevis: React.FC = () => {
   const [footerValues, setFooterValues] = useState<{
     totalHT: number;
     netAPayer: number;
-  }>({ totalHT: 0, netAPayer: 0 });
+    totalTVA: number;
+  }>({ totalHT: 0, netAPayer: 0, totalTVA: 0 });
 
   // Utiliser useForm de react-hook-form avec le résolveur zod
   const {
@@ -83,11 +84,13 @@ export const FormDevis: React.FC = () => {
       (sum, item) => sum + item.priceHT * item.quantity,
       0
     );
-    const netAPayer = TabValues.reduce((sum, item) => {
-      const tvaAmount = item.priceHT * (item.tva / 100) * item.quantity;
-      return sum + item.priceHT * item.quantity + tvaAmount;
-    }, 0);
-    setFooterValues({ totalHT, netAPayer });
+    const totalTVA = TabValues.reduce(
+      (sum, item) => sum + (item.priceHT * item.quantity * item.tva) / 100,
+      0
+    );
+    const netAPayer = totalHT + totalTVA;
+
+    setFooterValues({ totalHT, netAPayer, totalTVA });
   }, [TabValues]);
 
   const tw = createTw({
@@ -112,8 +115,8 @@ export const FormDevis: React.FC = () => {
   }> = ({ data, tabValues, bankDetails, footerValues }) => (
     <Document>
       <Page style={tw("p-2 text-sans")} size="A4">
-        <View style={tw("flex flex-row justify-between   h-1/5 ")}>
-          <View style={tw("")}>
+        <View style={tw("flex flex-row justify-between h-1/5")}>
+          <View>
             <Image src="./src/assets/dcrrlogo.png" style={tw("w-44")} />
             <Text style={tw("text-sm font-bold")}>
               Denquin & Ciatti Refrigeration Reglementary
@@ -144,15 +147,15 @@ export const FormDevis: React.FC = () => {
               </Text>
             </View>
           </View>
-          <View style={tw("flex flex-col ")}>
-            <Text style={tw(" text-2xl self-end")}>Devis</Text>
-            <Text style={tw("  inline self-end text-sm")}>
+          <View style={tw("flex flex-col")}>
+            <Text style={tw("text-2xl self-end")}>Devis</Text>
+            <Text style={tw("inline self-end text-sm")}>
               Objet du devis : {data.objetDevis}
             </Text>
-            <Text style={tw(" self-end  text-sm")}>
+            <Text style={tw("self-end text-sm")}>
               Nom de l'affaire : {data.nomAffaire}
             </Text>
-            <Text style={tw("  self-end text-sm")}>Client : {data.client}</Text>
+            <Text style={tw("self-end text-sm")}>Client : {data.client}</Text>
           </View>
         </View>
         <View style={tw("mt-5")}>
@@ -161,30 +164,30 @@ export const FormDevis: React.FC = () => {
               "flex flex-row justify-between bg-lime-600 rounded-t-lg p-1 text-white font-bold"
             )}
           >
-            <Text style={tw("text-sm pt-2 w-48 ")}>Désignation</Text>
+            <Text style={tw("text-sm pt-2 w-48")}>Désignation</Text>
             <Text style={tw("text-sm ml-6 pt-2")}>Qté</Text>
-            <Text style={tw("text-sm pt-2 ")}>Unité</Text>
-            <Text style={tw("text-sm pt-2 ")}>Prix U.HT</Text>
+            <Text style={tw("text-sm pt-2")}>Unité</Text>
+            <Text style={tw("text-sm pt-2")}>Prix U.HT</Text>
             <Text style={tw("text-sm pt-2")}>TVA</Text>
-            <Text style={tw("text-sm pt-2 ")}>Total HT</Text>
+            <Text style={tw("text-sm pt-2")}>Total HT</Text>
           </View>
 
           {tabValues.map((item, index) => (
-            <View key={index} style={tw("flex flex-row justify-between  p-1")}>
-              <Text style={tw("  w-52  text-sm")}>{item.designation}</Text>
-              <Text style={tw("w-10  text-right overflow-hidden  text-sm")}>
+            <View key={index} style={tw("flex flex-row justify-between p-1")}>
+              <Text style={tw("w-52 text-sm")}>{item.designation}</Text>
+              <Text style={tw("w-10 text-right overflow-hidden text-sm")}>
                 {item.quantity}
               </Text>
-              <Text style={tw("w-10    overflow-hidden text-sm")}>
+              <Text style={tw("w-10 overflow-hidden text-sm")}>
                 {item.unit}
               </Text>
-              <Text style={tw("w-10  text-right overflow-hidden text-sm")}>
+              <Text style={tw("w-10 text-right overflow-hidden text-sm")}>
                 {item.priceHT} €
               </Text>
-              <Text style={tw("w-10 text-right  overflow-hidden text-sm")}>
+              <Text style={tw("w-10 text-right overflow-hidden text-sm")}>
                 {item.tva} %
               </Text>
-              <Text style={tw("w-14  text-right overflow-hidden text-sm")}>
+              <Text style={tw("w-14 text-right overflow-hidden text-sm")}>
                 {item.totalHT.toFixed(2)} €
               </Text>
             </View>
@@ -195,30 +198,30 @@ export const FormDevis: React.FC = () => {
           <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
             <Text style={tw("text-2lg mb-2")}>Détails de paiement</Text>
             <View style={tw("flex flex-row")}>
-              <Image src="./src/assets/banque.png" style={tw(" w-5")} />
+              <Image src="./src/assets/banque.png" style={tw("w-5")} />
               <Text style={tw("text-sm pl-2")}>IBAN : {bankDetails.iban}</Text>
             </View>
             <View style={tw("flex flex-row")}>
-              <Image
-                src="./src/assets/cheque-bancaire.png"
-                style={tw(" w-5")}
-              />
+              <Image src="./src/assets/cheque-bancaire.png" style={tw("w-5")} />
               <Text style={tw("text-sm pl-2")}>
                 Nom de l'entreprise : {bankDetails.companyName}
               </Text>
             </View>
           </View>
-          <View style={tw("mt-5 border border-slate-300  rounded-lg")}>
+          <View style={tw("mt-5 border border-slate-300 rounded-lg")}>
             <Text style={tw("text-2xl mb-2 p-2")}>Résumé</Text>
             <Text style={tw("text-lg p-2")}>
               Total HT: {footerValues.totalHT} €
             </Text>
+            <Text style={tw("text-lg p-2")}>
+              Total TVA: {footerValues.totalTVA.toFixed(2)} €
+            </Text>
             <Text
               style={tw(
-                "text-lg rounded-b-lg bg-lime-600 pt-2 px-4  text-xl text-white font-bold"
+                "text-lg rounded-b-lg bg-lime-600 pt-2 px-4 text-xl text-white font-bold"
               )}
             >
-              Net à payer: {footerValues.netAPayer} €
+              Net à payer: {footerValues.netAPayer.toFixed(2)} €
             </Text>
           </View>
         </View>
@@ -296,8 +299,8 @@ export const FormDevis: React.FC = () => {
           </div>
         </form>
 
-        <div className="w-1/2 h-screen my-5 overflow-hidden pdfView rounded-3xl ">
-          <PDFViewer className="w-full h-full over">
+        <div className="w-1/2 h-screen my-5 overflow-hidden pdfView rounded-3xl">
+          <PDFViewer className="w-full h-full">
             <MyDocument
               data={{
                 objetDevis: watch("objetDevis"),
@@ -462,6 +465,7 @@ const TabFooter: React.FC<{
   onFooterValuesChange: (footerValues: {
     totalHT: number;
     netAPayer: number;
+    totalTVA: number;
   }) => void;
   bankDetails: { iban: string; companyName: string };
   handleBankDetailsChange: (field: string, value: string) => void;
@@ -480,18 +484,21 @@ const TabFooter: React.FC<{
     0
   ).toFixed(2);
 
-  const netAPayer = TabValues.reduce((sum, item) => {
-    const tvaAmount = item.priceHT * (item.tva / 100) * item.quantity;
-    return sum + item.priceHT * item.quantity + tvaAmount;
-  }, 0).toFixed(2);
+  const totalTVA = TabValues.reduce(
+    (sum, item) => sum + (item.priceHT * item.quantity * item.tva) / 100,
+    0
+  ).toFixed(2);
+
+  const netAPayer = (parseFloat(totalHT) + parseFloat(totalTVA)).toFixed(2);
 
   // Mise à jour des valeurs du footer
   useEffect(() => {
     onFooterValuesChange({
       totalHT: parseFloat(totalHT),
       netAPayer: parseFloat(netAPayer),
+      totalTVA: parseFloat(totalTVA),
     });
-  }, [totalHT, netAPayer, onFooterValuesChange]);
+  }, [totalHT, netAPayer, totalTVA, onFooterValuesChange]);
 
   return (
     <div className="flex justify-between w-full">
@@ -550,7 +557,7 @@ const TabFooter: React.FC<{
         </div>
       </div>
       <div className="flex flex-col w-1/3 mt-3 rounded-lg justify borde">
-        <ul className="flex justify-between p-2 border rounded-t-lg border-slate-200 ">
+        <ul className="flex justify-between p-2 border rounded-t-lg border-slate-200">
           <li>Total HT</li>
           <li>{totalHT} €</li>
         </ul>
@@ -572,6 +579,10 @@ const TabFooter: React.FC<{
               </ul>
             )
         )}
+        <ul className="flex justify-between p-2 font-bold border border-slate-200">
+          <li className="font-bold">Total TVA</li>
+          <li>{totalTVA} €</li>
+        </ul>
         <ul className="flex justify-between p-2 font-bold border border-slate-200">
           <li className="font-bold">Total TTC </li>
           <li>{netAPayer} €</li>
