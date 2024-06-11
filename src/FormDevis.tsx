@@ -37,6 +37,10 @@ export const FormDevis: React.FC = () => {
     totalTVA: number;
   }>({ totalHT: 0, netAPayer: 0, totalTVA: 0 });
 
+  const [acomptes, setAcomptes] = useState<
+    { percentage: number; unit: string; option: string }[]
+  >([]);
+
   // Utiliser useForm de react-hook-form avec le résolveur zod
   const {
     register,
@@ -79,6 +83,12 @@ export const FormDevis: React.FC = () => {
     }));
   };
 
+  const handlePercentageChange = (
+    newAcomptes: { percentage: number; unit: string; option: string }[]
+  ) => {
+    setAcomptes(newAcomptes);
+  };
+
   useEffect(() => {
     const totalHT = TabValues.reduce(
       (sum, item) => sum + item.priceHT * item.quantity,
@@ -112,7 +122,8 @@ export const FormDevis: React.FC = () => {
     tabValues: typeof TabValues;
     bankDetails: typeof bankDetails;
     footerValues: typeof footerValues;
-  }> = ({ data, tabValues, bankDetails, footerValues }) => (
+    acomptes: { percentage: number; unit: string; option: string }[];
+  }> = ({ data, tabValues, bankDetails, footerValues, acomptes }) => (
     <Document>
       <Page style={tw("p-2 text-sans")} size="A4">
         <View style={tw("flex flex-row justify-between h-1/5")}>
@@ -195,19 +206,41 @@ export const FormDevis: React.FC = () => {
         </View>
 
         <View style={tw("flex flex-row justify-between mx-4")}>
-          <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
-            <Text style={tw("text-2lg mb-2")}>Détails de paiement</Text>
-            <View style={tw("flex flex-row")}>
-              <Image src="./src/assets/banque.png" style={tw("w-5")} />
-              <Text style={tw("text-sm pl-2")}>IBAN : {bankDetails.iban}</Text>
+          <View>
+            <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
+              <Text style={tw("text-2lg mb-2")}>Acompte</Text>
+              <View style={tw("flex ")}>
+                {acomptes.length > 0 ? (
+                  acomptes.map((acompte, index) => (
+                    <Text key={index} style={tw("text-sm pl-2")}>
+                      {acompte.percentage} {acompte.unit} {acompte.option}
+                    </Text>
+                  ))
+                ) : (
+                  <Text style={tw("text-sm pl-2")}>Pas d'acompte</Text>
+                )}
+              </View>
             </View>
-            <View style={tw("flex flex-row")}>
-              <Image src="./src/assets/cheque-bancaire.png" style={tw("w-5")} />
-              <Text style={tw("text-sm pl-2")}>
-                Nom de l'entreprise : {bankDetails.companyName}
-              </Text>
+            <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
+              <Text style={tw("text-2lg mb-2")}>Détails de paiement</Text>
+              <View style={tw("flex flex-row")}>
+                <Image src="./src/assets/banque.png" style={tw("w-5")} />
+                <Text style={tw("text-sm pl-2")}>
+                  IBAN : {bankDetails.iban}
+                </Text>
+              </View>
+              <View style={tw("flex flex-row")}>
+                <Image
+                  src="./src/assets/cheque-bancaire.png"
+                  style={tw("w-5")}
+                />
+                <Text style={tw("text-sm pl-2")}>
+                  Nom de l'entreprise : {bankDetails.companyName}
+                </Text>
+              </View>
             </View>
           </View>
+
           <View style={tw("mt-5 border border-slate-300 rounded-lg")}>
             <Text style={tw("text-2xl mb-2 p-2")}>Résumé</Text>
             <Text style={tw("text-lg p-2")}>
@@ -294,6 +327,7 @@ export const FormDevis: React.FC = () => {
                 onFooterValuesChange={setFooterValues}
                 bankDetails={bankDetails}
                 handleBankDetailsChange={handleBankDetailsChange}
+                handlePercentageChange={handlePercentageChange}
               />
             </div>
           </div>
@@ -310,6 +344,7 @@ export const FormDevis: React.FC = () => {
               tabValues={TabValues}
               bankDetails={bankDetails}
               footerValues={footerValues}
+              acomptes={acomptes}
             />
           </PDFViewer>
         </div>
@@ -469,11 +504,15 @@ const TabFooter: React.FC<{
   }) => void;
   bankDetails: { iban: string; companyName: string };
   handleBankDetailsChange: (field: string, value: string) => void;
+  handlePercentageChange: (
+    newAcomptes: { percentage: number; unit: string; option: string }[]
+  ) => void;
 }> = ({
   TabValues,
   onFooterValuesChange,
   bankDetails,
   handleBankDetailsChange,
+  handlePercentageChange,
 }) => {
   const calculateTvaAmount = (tva: number, prixHT: number) => {
     return ((tva / 100) * prixHT).toFixed(2);
@@ -502,11 +541,11 @@ const TabFooter: React.FC<{
 
   return (
     <div className="flex justify-between w-full">
-      <div className="w-full ">
+      <div className="w-full">
         <div className="w-1/3 p-3 mt-5 border rounded-lg border-slate-200 h-fit">
           <h1 className="mb-2">Acompte</h1>
           <div>
-            <PercentageInput></PercentageInput>
+            <PercentageInput onChange={handlePercentageChange} />
           </div>
         </div>
         <div className="w-1/3 p-3 mt-5 border rounded-lg border-slate-200 h-fit">

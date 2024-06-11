@@ -7,7 +7,11 @@ interface Acompte {
   option: string;
 }
 
-const PercentageInput: React.FC = () => {
+interface PercentageInputProps {
+  onChange: (acomptes: Acompte[]) => void;
+}
+
+const PercentageInput: React.FC<PercentageInputProps> = ({ onChange }) => {
   const [acomptes, setAcomptes] = useState<Acompte[]>([
     { percentage: 10, unit: "%", option: "à la commande" },
   ]);
@@ -20,6 +24,7 @@ const PercentageInput: React.FC = () => {
     const newAcomptes = [...acomptes];
     newAcomptes[index].percentage = Number(event.target.value);
     setAcomptes(newAcomptes);
+    onChange(newAcomptes);
   };
 
   const handleUnitChange = (
@@ -29,6 +34,7 @@ const PercentageInput: React.FC = () => {
     const newAcomptes = [...acomptes];
     newAcomptes[index].unit = event.target.value;
     setAcomptes(newAcomptes);
+    onChange(newAcomptes);
   };
 
   const handleOptionChange = (
@@ -38,14 +44,17 @@ const PercentageInput: React.FC = () => {
     const newAcomptes = [...acomptes];
     newAcomptes[index].option = event.target.value;
     setAcomptes(newAcomptes);
+    onChange(newAcomptes);
   };
 
   const handleAddAcompte = (e: React.MouseEvent) => {
     e.preventDefault();
-    setAcomptes([
+    const newAcomptes = [
       ...acomptes,
       { percentage: 10, unit: "%", option: "à la commande" },
-    ]);
+    ];
+    setAcomptes(newAcomptes);
+    onChange(newAcomptes);
   };
 
   const handleSave = (e: React.FormEvent) => {
@@ -63,6 +72,7 @@ const PercentageInput: React.FC = () => {
     e.preventDefault();
     const newAcomptes = acomptes.filter((_, i) => i !== index);
     setAcomptes(newAcomptes);
+    onChange(newAcomptes);
   };
 
   return (
