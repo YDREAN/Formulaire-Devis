@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,6 +7,7 @@ import { Link, PDFViewer } from "@react-pdf/renderer";
 import { Page, Text, View, Document, Image } from "@react-pdf/renderer";
 import { createTw } from "react-pdf-tailwind";
 import { Textarea } from "@/components/ui/textarea";
+import { TextClickable } from "./FormDevis";
 
 // Définir le schéma de validation avec Zod
 const devisSchema = z.object({
@@ -305,20 +306,6 @@ export const FormAvoir: React.FC = () => {
         </div>
       </div>
     </>
-  );
-};
-
-const TextClickable: React.FC<{
-  children: ReactNode;
-  textOnClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}> = ({ children, textOnClick }) => {
-  return (
-    <button
-      onClick={textOnClick}
-      className="m-auto my-3 text-xl font-medium text-yellow-600 w-fit focus:outline-yellow-700 outline-offset-2"
-    >
-      {children}
-    </button>
   );
 };
 

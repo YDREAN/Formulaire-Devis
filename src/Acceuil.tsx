@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import BonDeCommande from "./BonDeCommande";
 import FormAvoir from "./FormAvoir";
-import FormDevis from "./FormDevis";
+
 import { Button } from "./components/ui/button";
+import FormDevis from "./FormDevis";
 
 type MenuProps = {
   onMenuItemClick: (item: string) => void;

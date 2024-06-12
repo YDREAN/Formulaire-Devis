@@ -3,6 +3,7 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { TextClickable } from "./FormDevis";
 
 const contactSchema = z.object({
   civilite: z.string().nonempty("Civilité est requise"),
@@ -308,20 +309,5 @@ const PhoneNumberInput: React.FC<{
         onChange={handleChange}
       />
     </div>
-  );
-};
-
-// Composant pour les boutons de texte cliquable
-const TextClickable: React.FC<{
-  children: ReactNode;
-  textOnClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}> = ({ children, textOnClick }) => {
-  return (
-    <button
-      onClick={textOnClick}
-      className="m-auto my-3 text-xl font-medium w-fit focus:outline-lime-700 outline-offset-2 text-lime-600"
-    >
-      {children}
-    </button>
   );
 };

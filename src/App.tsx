@@ -1,10 +1,11 @@
+import FormView from "./Acceuil";
 import Acceuil from "./Acceuil";
-import FormDevis from "./FormDevis";
+import Menu from "./Acceuil";
 
 function App() {
   return (
     <>
-      <Acceuil />
+      <Menu />
     </>
   );
 }
