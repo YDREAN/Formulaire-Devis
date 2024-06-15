@@ -12,9 +12,7 @@ interface PercentageInputProps {
 }
 
 const PercentageInput: React.FC<PercentageInputProps> = ({ onChange }) => {
-  const [acomptes, setAcomptes] = useState<Acompte[]>([
-    { percentage: 10, unit: "%", option: "à la commande" },
-  ]);
+  const [acomptes, setAcomptes] = useState<Acompte[]>([]);
   const [savedData, setSavedData] = useState<string>("");
 
   const handlePercentageChange = (
@@ -55,17 +53,6 @@ const PercentageInput: React.FC<PercentageInputProps> = ({ onChange }) => {
     ];
     setAcomptes(newAcomptes);
     onChange(newAcomptes);
-  };
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    const data = acomptes
-      .map(
-        (acompte) => `${acompte.percentage} ${acompte.unit} ${acompte.option}`
-      )
-      .join(", ");
-    setSavedData(data);
-    setAcomptes([]);
   };
 
   const handleClear = (index: number, e: React.MouseEvent) => {
@@ -126,15 +113,7 @@ const PercentageInput: React.FC<PercentageInputProps> = ({ onChange }) => {
       >
         + Ajouter un acompte
       </Button>
-      <div className="flex mt-4 space-x-2">
-        <Button
-          variant={"outlineB"}
-          onClick={handleSave}
-          className="text-lime-600 border-lime-500 hover:bg-lime-600 hover:text-white"
-        >
-          Enregistrer
-        </Button>
-      </div>
+
       {savedData && <p className="mt-4">{savedData}</p>}
     </div>
   );
