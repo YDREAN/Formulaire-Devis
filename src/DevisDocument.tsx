@@ -11,7 +11,7 @@ type DevisSchema = {
 };
 
 // Types du tableau
-type TabValue = {
+export type TabValue = {
   designation: string;
   quantity: number;
   unit: string;
@@ -27,7 +27,7 @@ type BankDetails = {
   companyName: string;
 };
 
-type FooterValues = {
+export type FooterValues = {
   totalHT: number;
   net: number;
   totalTVA: number;
@@ -39,7 +39,7 @@ type Acomptes = {
   option: string;
 };
 
-const tw = createTw({
+export const tw = createTw({
   theme: {
     fontFamily: {
       sans: ["Roboto"],
@@ -53,7 +53,7 @@ const tw = createTw({
 });
 
 // Create Document Component
-export const DocumentPDF: React.FC<{
+export const DevisDocument: React.FC<{
   data: DevisSchema;
   tabValues: TabValue[];
   bankDetails: BankDetails;
@@ -64,7 +64,16 @@ export const DocumentPDF: React.FC<{
     <Page style={tw("p-2 text-sans")} size="A4">
       <View style={tw("flex flex-row justify-between h-1/5")}>
         {DCRRInfo()}
-        {DevisHeadInfo(data)}
+        <View style={tw(" flex flex-col")}>
+          <Text style={tw("text-2xl self-end")}>Devis</Text>
+          <Text style={tw("inline self-end text-sm")}>
+            Objet du devis : {data.objetDevis}
+          </Text>
+          <Text style={tw("self-end text-sm")}>
+            Nom de l'affaire : {data.nomAffaire}
+          </Text>
+          <Text style={tw("self-end text-sm")}>Client : {data.client}</Text>
+        </View>
       </View>
       <View style={tw("mt-5")}>
         <View
@@ -100,86 +109,61 @@ export const DocumentPDF: React.FC<{
         ))}
       </View>
 
-      {DevisFooter(acomptes, bankDetails, footerValues)}
+      <View style={tw(" flex flex-row justify-between mx-4")}>
+        <View style={tw("")}>
+          <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
+            <Text style={tw("text-2lg mb-2")}>Acompte</Text>
+            <View style={tw("flex ")}>
+              {acomptes.length > 0 ? (
+                acomptes.map((acompte, index) => (
+                  <Text key={index} style={tw("text-sm pl-2")}>
+                    {acompte.percentage} {acompte.unit} {acompte.option}
+                  </Text>
+                ))
+              ) : (
+                <Text style={tw("text-sm pl-2")}>Pas d'acompte</Text>
+              )}
+            </View>
+          </View>
+          <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
+            <Text style={tw("text-2lg mb-2")}>Détails de paiement</Text>
+            <View style={tw("flex flex-row")}>
+              <Image src="./src/assets/banque.png" style={tw("w-5")} />
+              <Text style={tw("text-sm pl-2")}>IBAN : {bankDetails.iban}</Text>
+            </View>
+            <View style={tw("flex flex-row")}>
+              <Image src="./src/assets/cheque-bancaire.png" style={tw("w-5")} />
+              <Text style={tw("text-sm pl-2")}>
+                Nom de l'entreprise : {bankDetails.companyName}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={tw("mt-5 border border-slate-300 rounded-lg")}>
+          <Text style={tw("text-2xl mb-2 p-2")}>Résumé</Text>
+          <Text style={tw("text-lg p-2")}>
+            Total HT: {footerValues.totalHT} €
+          </Text>
+          <Text style={tw("text-lg p-2")}>
+            Total TVA: {footerValues.totalTVA.toFixed(2)} €
+          </Text>
+          <Text
+            style={tw(
+              "text-lg rounded-b-lg bg-lime-600 pt-2 px-4 text-xl text-white font-bold"
+            )}
+          >
+            Net à payer: {footerValues.net.toFixed(2)} €
+          </Text>
+        </View>
+      </View>
     </Page>
   </Document>
 );
 
-const DevisFooter = (
-  acomptes: { percentage: number; unit: string; option: string }[],
-  bankDetails: BankDetails,
-  footerValues: FooterValues
-) => {
+export const DCRRInfo = () => {
   return (
-    <View style={tw("bg-yellow-200 flex flex-row justify-between mx-4")}>
-      <View style={tw("bg-red-100")}>
-        <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
-          <Text style={tw("text-2lg mb-2")}>Acompte</Text>
-          <View style={tw("flex ")}>
-            {acomptes.length > 0 ? (
-              acomptes.map((acompte, index) => (
-                <Text key={index} style={tw("text-sm pl-2")}>
-                  {acompte.percentage} {acompte.unit} {acompte.option}
-                </Text>
-              ))
-            ) : (
-              <Text style={tw("text-sm pl-2")}>Pas d'acompte</Text>
-            )}
-          </View>
-        </View>
-        <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
-          <Text style={tw("text-2lg mb-2")}>Détails de paiement</Text>
-          <View style={tw("flex flex-row")}>
-            <Image src="./src/assets/banque.png" style={tw("w-5")} />
-            <Text style={tw("text-sm pl-2")}>IBAN : {bankDetails.iban}</Text>
-          </View>
-          <View style={tw("flex flex-row")}>
-            <Image src="./src/assets/cheque-bancaire.png" style={tw("w-5")} />
-            <Text style={tw("text-sm pl-2")}>
-              Nom de l'entreprise : {bankDetails.companyName}
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={tw("mt-5 border border-slate-300 rounded-lg")}>
-        <Text style={tw("text-2xl mb-2 p-2")}>Résumé</Text>
-        <Text style={tw("text-lg p-2")}>
-          Total HT: {footerValues.totalHT} €
-        </Text>
-        <Text style={tw("text-lg p-2")}>
-          Total TVA: {footerValues.totalTVA.toFixed(2)} €
-        </Text>
-        <Text
-          style={tw(
-            "text-lg rounded-b-lg bg-lime-600 pt-2 px-4 text-xl text-white font-bold"
-          )}
-        >
-          Net à payer: {footerValues.net.toFixed(2)} €
-        </Text>
-      </View>
-    </View>
-  );
-};
-
-const DevisHeadInfo = (data: DevisSchema) => {
-  return (
-    <View style={tw("bg-blue-100 flex flex-col")}>
-      <Text style={tw("text-2xl self-end")}>Devis</Text>
-      <Text style={tw("inline self-end text-sm")}>
-        Objet du devis : {data.objetDevis}
-      </Text>
-      <Text style={tw("self-end text-sm")}>
-        Nom de l'affaire : {data.nomAffaire}
-      </Text>
-      <Text style={tw("self-end text-sm")}>Client : {data.client}</Text>
-    </View>
-  );
-};
-
-const DCRRInfo = () => {
-  return (
-    <View style={tw("bg-red-200")}>
+    <View style={tw("")}>
       <Image src="./src/assets/dcrrlogo.png" style={tw("w-44")} />
       <Text style={tw("text-sm font-bold")}>
         Denquin & Ciatti Refrigeration Reglementary

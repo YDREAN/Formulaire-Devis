@@ -8,6 +8,7 @@ import { Page, Text, View, Document, Image } from "@react-pdf/renderer";
 import { createTw } from "react-pdf-tailwind";
 import { Textarea } from "@/components/ui/textarea";
 import { TextClickable } from "./FormDevis";
+import { AvoirDocument } from "./AvoirDocument";
 
 // Définir le schéma de validation avec Zod
 const devisSchema = z.object({
@@ -17,7 +18,7 @@ const devisSchema = z.object({
 });
 
 // Définir le type basé sur le schéma de validation
-type DevisSchema = z.infer<typeof devisSchema>;
+export type AvoirSchema = z.infer<typeof devisSchema>;
 
 export const FormAvoir: React.FC = () => {
   const [lignes, setLignes] = useState<string[]>([]);
@@ -34,8 +35,9 @@ export const FormAvoir: React.FC = () => {
 
   const [footerValues, setFooterValues] = useState<{
     totalHT: number;
-    netADeduire: number;
-  }>({ totalHT: 0, netADeduire: 0 });
+    net: number;
+    totalTVA: number;
+  }>({ totalHT: 0, net: 0, totalTVA: 0 });
 
   const [conditionText, setConditionText] = useState("");
 
@@ -44,7 +46,7 @@ export const FormAvoir: React.FC = () => {
     register,
     formState: { errors },
     watch,
-  } = useForm<DevisSchema>({
+  } = useForm<AvoirSchema>({
     resolver: zodResolver(devisSchema),
   });
 
@@ -79,11 +81,12 @@ export const FormAvoir: React.FC = () => {
       (sum, item) => sum + item.priceHT * item.quantity,
       0
     );
-    const netADeduire = TabValues.reduce((sum, item) => {
-      const tvaAmount = item.priceHT * (item.tva / 100) * item.quantity;
-      return sum + item.priceHT * item.quantity + tvaAmount;
-    }, 0);
-    setFooterValues({ totalHT, netADeduire: netADeduire });
+    const totalTVA = TabValues.reduce(
+      (sum, item) => sum + (item.priceHT * item.quantity * item.tva) / 100,
+      0
+    );
+    const net = totalHT + totalTVA;
+    setFooterValues({ totalHT, net: net, totalTVA });
   }, [TabValues]);
 
   const tw = createTw({
@@ -101,7 +104,7 @@ export const FormAvoir: React.FC = () => {
 
   // Create Document Component
   const MyDocument: React.FC<{
-    data: DevisSchema;
+    data: AvoirSchema;
     tabValues: typeof TabValues;
     conditionText: string;
     footerValues: typeof footerValues;
@@ -210,7 +213,7 @@ export const FormAvoir: React.FC = () => {
                 "text-lg rounded-b-lg bg-yellow-600 pt-2 px-4 text-xl text-white font-bold"
               )}
             >
-              Net à déduire: {footerValues.netADeduire} €
+              Net à déduire: {footerValues.net} €
             </Text>
           </View>
         </View>
@@ -293,6 +296,18 @@ export const FormAvoir: React.FC = () => {
         <div className="w-1/2 h-screen my-5 overflow-hidden pdfView rounded-3xl ">
           <PDFViewer className="w-full h-full over">
             <MyDocument
+              data={{
+                Devis: watch("Devis"),
+                nomAffaire: watch("nomAffaire"),
+                client: watch("client"),
+              }}
+              tabValues={TabValues}
+              footerValues={footerValues}
+              conditionText={conditionText} // Passer conditionText ici
+            />
+          </PDFViewer>
+          <PDFViewer className="w-full h-full over">
+            <AvoirDocument
               data={{
                 Devis: watch("Devis"),
                 nomAffaire: watch("nomAffaire"),

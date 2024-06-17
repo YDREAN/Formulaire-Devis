@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./components/ui/input";
 import { PDFViewer } from "@react-pdf/renderer";
-import { DocumentPDF } from "./DocumentPDF";
+import { DevisDocument } from "./DevisDocument";
 import { Footer } from "./Footer";
 import Tableau from "./Tableau";
 
@@ -160,7 +160,7 @@ export const FormDevis: React.FC = () => {
 
         <div className="w-1/2 h-screen my-5 overflow-hidden pdfView rounded-3xl">
           <PDFViewer className="w-full h-full">
-            <DocumentPDF
+            <DevisDocument
               data={{
                 objetDevis: watch("objetDevis"),
                 nomAffaire: watch("nomAffaire"),
