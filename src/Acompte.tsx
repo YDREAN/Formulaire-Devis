@@ -8,10 +8,11 @@ interface Acompte {
 }
 
 interface PercentageInputProps {
+  net: number;
   onChange: (acomptes: Acompte[]) => void;
 }
 
-const PercentageInput: React.FC<PercentageInputProps> = ({ onChange }) => {
+const Acompte: React.FC<PercentageInputProps> = ({ net, onChange }) => {
   const [acomptes, setAcomptes] = useState<Acompte[]>([]);
   const [savedData, setSavedData] = useState<string>("");
 
@@ -61,6 +62,7 @@ const PercentageInput: React.FC<PercentageInputProps> = ({ onChange }) => {
     setAcomptes(newAcomptes);
     onChange(newAcomptes);
   };
+  const calculatePercentage = (net: number) => {};
 
   return (
     <div className="flex flex-col items-center justify-center space-x-2">
@@ -119,4 +121,4 @@ const PercentageInput: React.FC<PercentageInputProps> = ({ onChange }) => {
   );
 };
 
-export default PercentageInput;
+export default Acompte;
