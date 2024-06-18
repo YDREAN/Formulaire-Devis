@@ -270,20 +270,27 @@ export const FormDevis: React.FC = () => {
           </div>
         </form>
 
-        <div className="w-1/2 h-screen my-5 overflow-hidden pdfView rounded-3xl">
-          <PDFViewer className="w-full h-full">
-            <DevisDocument
-              data={{
-                objetDevis: watch("objetDevis"),
-                nomAffaire: watch("nomAffaire"),
-                client: watch("client"),
-              }}
-              tabValues={TabValues}
-              bankDetails={bankDetails}
-              footerValues={footerValues}
-              acomptes={acomptes}
-            />
-          </PDFViewer>
+        <div className="flex justify-center w-full h-screen my-5 overflow-hidden pdfView ">
+          {TabValues.length > 0 ? (
+            <PDFViewer className="w-full h-full ">
+              <DevisDocument
+                data={{
+                  objetDevis: watch("objetDevis"),
+                  nomAffaire: watch("nomAffaire"),
+                  client: watch("client"),
+                }}
+                tabValues={TabValues}
+                bankDetails={bankDetails}
+                footerValues={footerValues}
+                acomptes={acomptes}
+              />
+            </PDFViewer>
+          ) : (
+            <p className="text-3xl">
+              Ajoutez d'abord une ligne au tableau pour accéder à la
+              prévisualitsation
+            </p>
+          )}
         </div>
       </div>
     </>
