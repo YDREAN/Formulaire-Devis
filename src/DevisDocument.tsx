@@ -52,6 +52,21 @@ export const tw = createTw({
   },
 });
 
+const TableHeader = () => (
+  <View
+    style={tw(
+      "flex flex-row justify-between bg-lime-600 rounded-t-lg p-1 text-white font-bold"
+    )}
+  >
+    <Text style={tw("text-sm pt-2 w-48")}>Désignation</Text>
+    <Text style={tw("text-sm ml-6 pt-2")}>Qté</Text>
+    <Text style={tw("text-sm pt-2")}>Unité</Text>
+    <Text style={tw("text-sm pt-2")}>Prix U.HT</Text>
+    <Text style={tw("text-sm pt-2")}>TVA</Text>
+    <Text style={tw("text-sm pt-2")}>Total HT</Text>
+  </View>
+);
+
 // Create Document Component
 export const DevisDocument: React.FC<{
   data: DevisSchema;
@@ -76,21 +91,13 @@ export const DevisDocument: React.FC<{
         </View>
       </View>
       <View style={tw("mt-5")}>
-        <View
-          style={tw(
-            "flex flex-row justify-between bg-lime-600 rounded-t-lg p-1 text-white font-bold"
-          )}
-        >
-          <Text style={tw("text-sm pt-2 w-48")}>Désignation</Text>
-          <Text style={tw("text-sm ml-6 pt-2")}>Qté</Text>
-          <Text style={tw("text-sm pt-2")}>Unité</Text>
-          <Text style={tw("text-sm pt-2")}>Prix U.HT</Text>
-          <Text style={tw("text-sm pt-2")}>TVA</Text>
-          <Text style={tw("text-sm pt-2")}>Total HT</Text>
-        </View>
-
+        <TableHeader />
         {tabValues.map((item, index) => (
-          <View key={index} style={tw("flex flex-row justify-between p-1")}>
+          <View
+            key={index}
+            style={tw("flex flex-row justify-between p-1")}
+            wrap={false}
+          >
             <Text style={tw("w-52 text-sm")}>{item.designation}</Text>
             <Text style={tw("w-10 text-right overflow-hidden text-sm")}>
               {item.quantity}
@@ -117,7 +124,20 @@ export const DevisDocument: React.FC<{
               {acomptes.length > 0 ? (
                 acomptes.map((acompte, index) => (
                   <Text key={index} style={tw("text-sm pl-2")}>
-                    {acompte.percentage} {acompte.unit} {acompte.option}
+                    {acompte.unit === "%" ? (
+                      <Text style={tw("")}>
+                        (
+                        {(
+                          footerValues.net *
+                          (acompte.percentage / 100)
+                        ).toFixed(2)}{" "}
+                        €) {acompte.percentage} {acompte.unit} {acompte.option}
+                      </Text>
+                    ) : (
+                      <Text>
+                        {acompte.percentage} € {acompte.unit} {acompte.option}
+                      </Text>
+                    )}
                   </Text>
                 ))
               ) : (

@@ -62,7 +62,10 @@ const Acompte: React.FC<PercentageInputProps> = ({ net, onChange }) => {
     setAcomptes(newAcomptes);
     onChange(newAcomptes);
   };
-  const calculatePercentage = (net: number) => {};
+
+  const calculatePercentage = (net: number, percentage: number) => {
+    return net * (percentage / 100);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center space-x-2">
@@ -107,6 +110,9 @@ const Acompte: React.FC<PercentageInputProps> = ({ net, onChange }) => {
               alt="Supprimer"
             />
           </Button>
+          {acompte.unit === "%" && (
+            <p>= {calculatePercentage(net, acompte.percentage).toFixed(2)} €</p>
+          )}
         </div>
       ))}
       <Button

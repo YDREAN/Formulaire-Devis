@@ -166,7 +166,10 @@ export const FormDevis: React.FC = () => {
                   <div className="w-1/3 p-3 mt-5 border rounded-lg border-slate-200 h-fit">
                     <h1 className="mb-2">Acompte</h1>
                     <div>
-                      <Acompte onChange={handleAcompteChange} />
+                      <Acompte
+                        net={footerValues.net}
+                        onChange={handleAcompteChange}
+                      />
                     </div>
                   </div>
                   <div className="w-1/3 p-3 mt-5 border rounded-lg border-slate-200 h-fit">
