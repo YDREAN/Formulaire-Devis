@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from "react";
+import React, { ReactNode, useState, useEffect, useId } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +20,14 @@ export const devisSchema = z.object({
 type DevisSchema = z.infer<typeof devisSchema>;
 
 export const FormDevis: React.FC = () => {
+  const IdGenerator = () => {
+    const now = new Date();
+    const Id = now.getTime();
+    console.log(Id);
+    return Id;
+  };
+  const DevisID = IdGenerator();
+
   const [lignes, setLignes] = useState<string[]>([]);
   const [TabValues, setTabValues] = useState<
     {
@@ -274,6 +282,7 @@ export const FormDevis: React.FC = () => {
           {TabValues.length > 0 ? (
             <PDFViewer className="w-full h-full ">
               <DevisDocument
+                id={DevisID}
                 data={{
                   objetDevis: watch("objetDevis"),
                   nomAffaire: watch("nomAffaire"),
