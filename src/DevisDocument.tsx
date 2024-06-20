@@ -81,7 +81,13 @@ export const DevisDocument: React.FC<{
   return (
     <Document>
       {[...Array(totalPages)].map((_, pageIndex) => (
-        <Page style={tw("p-2 text-sans")} size="A4" key={pageIndex}>
+        <Page
+          renderAnnotationLayer={false}
+          renderTextLayer={false}
+          style={tw("p-2 text-sans")}
+          size="A4"
+          key={pageIndex}
+        >
           {pageIndex === 0 && (
             <View style={tw("flex flex-row justify-between h-1/5")}>
               {DCRRInfo()}
@@ -147,11 +153,11 @@ export const DevisDocument: React.FC<{
             <View style={tw(" flex flex-row justify-between mx-4")}>
               <View style={tw("")}>
                 <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
-                  <Text style={tw("text-lg mb-2")}>Acompte</Text>
+                  <Text style={tw("text-sm mb-2")}>Acompte</Text>
                   <View style={tw("flex ")}>
                     {acomptes.length > 0 ? (
                       acomptes.map((acompte, index) => (
-                        <Text key={index} style={tw("text-sm pl-2")}>
+                        <Text key={index} style={tw("text-xs pl-2")}>
                           {acompte.unit === "%" ? (
                             <Text style={tw("")}>
                               (
@@ -175,11 +181,15 @@ export const DevisDocument: React.FC<{
                     )}
                   </View>
                 </View>
-                <View style={tw("mt-5 border border-slate-300 p-2 rounded-lg")}>
-                  <Text style={tw("text-lg mb-2")}>Détails de paiement</Text>
+                <View
+                  style={tw(
+                    "overflow-hidden mt-5 border  border-slate-300 p-2 rounded-lg"
+                  )}
+                >
+                  <Text style={tw("text-sm mb-2 ")}>Détails de paiement</Text>
                   <View style={tw("flex flex-row")}>
                     <Image src="./src/assets/banque.png" style={tw("w-5")} />
-                    <Text style={tw("text-sm pl-2")}>
+                    <Text style={tw("text-xs pl-2")}>
                       IBAN : {bankDetails.iban}
                     </Text>
                   </View>
@@ -188,27 +198,27 @@ export const DevisDocument: React.FC<{
                       src="./src/assets/cheque-bancaire.png"
                       style={tw("w-5")}
                     />
-                    <Text style={tw("text-sm pl-2")}>
+                    <Text style={tw("text-xs pl-2")}>
                       Nom de l'entreprise : {bankDetails.companyName}
                     </Text>
                   </View>
                 </View>
               </View>
 
-              <View style={tw("mt-10  rounded-lg max-w-80")}>
+              <View style={tw("mt-5  w-1/2 rounded-lg max-w-80")}>
                 <Text
                   style={tw(
-                    " rounded-t-lg border border-slate-300 text-sm p-1"
+                    " rounded-t-lg py-1 border border-slate-300 text-xs p-1"
                   )}
                 >
                   Total HT: {footerValues.totalHT.toFixed(2)} €
                 </Text>
-                <Text style={tw("text-sm p-1 border border-slate-300")}>
+                <Text style={tw("text-xs p-1 py-1 border border-slate-300")}>
                   Total TVA: {footerValues.totalTVA.toFixed(2)} €
                 </Text>
                 <Text
                   style={tw(
-                    "text-sm rounded-b-lg bg-lime-600 p-1  text-white font-bold"
+                    "text-sm rounded-b-lg bg-lime-600 p-1   text-white font-bold"
                   )}
                 >
                   Net à payer: {footerValues.net.toFixed(2)} €
@@ -224,30 +234,30 @@ export const DevisDocument: React.FC<{
 
 export const DCRRInfo = () => {
   return (
-    <View style={tw("")}>
+    <View style={tw("  ")}>
       <Image src="./src/assets/dcrrlogo.png" style={tw("w-44")} />
       <Text style={tw("text-sm font-bold")}>
         Denquin & Ciatti Refrigeration Reglementary
       </Text>
-      <Text style={tw("text-sm")}>36 Avenue Adrien Raynal, 94310 - ORLY</Text>
-      <Text style={tw("text-sm")}>SAS au capital de 1000€</Text>
-      <Link src="https://dcrr.fr/contact/" style={tw("text-sm")}>
+      <Text style={tw("text-xs")}>36 Avenue Adrien Raynal, 94310 - ORLY</Text>
+      <Text style={tw("text-xs")}>SAS au capital de 1000€</Text>
+      <Link src="https://dcrr.fr/contact/" style={tw("text-xs")}>
         Contactez-nous
       </Link>
       <View>
-        <Text style={tw("text-sm")}>
+        <Text style={tw("text-xs")}>
           <Text style={tw("font-bold")}>RCS </Text>
           Créteil B 951 054 394
         </Text>
-        <Text style={tw("text-sm")}>
+        <Text style={tw("text-xs")}>
           <Text style={tw("font-bold")}>APE </Text>
           7120B
         </Text>
-        <Text style={tw("text-sm")}>
+        <Text style={tw("text-xs")}>
           <Text style={tw("font-bold ")}>SIRET </Text>
           95105439400014
         </Text>
-        <Text style={tw("text-sm")}>
+        <Text style={tw("text-xs")}>
           <Text style={tw("font-bold ")}>TVA </Text>
           FR53951054394
         </Text>
