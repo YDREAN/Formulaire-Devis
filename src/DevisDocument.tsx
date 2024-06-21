@@ -102,9 +102,10 @@ export const DevisDocument: React.FC<{
                 <Text style={tw("self-end text-sm")}>
                   Nom de l'affaire : {data.nomAffaire}
                 </Text>
-                <Text style={tw("self-end text-sm")}>
-                  Client : {data.client}
-                </Text>
+                <View>
+                  <Text style={tw(" mt-10 mb-2 border border-lime-500")}></Text>
+                  <Text style={tw(" text-sm")}>Client : {data.client}</Text>
+                </View>
               </View>
             </View>
           )}
