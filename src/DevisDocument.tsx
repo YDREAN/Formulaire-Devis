@@ -57,12 +57,12 @@ const TableHeader = () => (
       "flex flex-row justify-between bg-lime-600 rounded-t-lg p-1 text-white font-bold"
     )}
   >
-    <Text style={tw("text-sm pt-2 w-48")}>Désignation</Text>
-    <Text style={tw("text-sm ml-6 pt-2")}>Qté</Text>
-    <Text style={tw("text-sm pt-2")}>Unité</Text>
-    <Text style={tw("text-sm pt-2")}>Prix U.HT</Text>
-    <Text style={tw("text-sm pt-2")}>TVA</Text>
-    <Text style={tw("text-sm pt-2")}>Total HT</Text>
+    <Text style={tw("text-sm pt-2 w-44 ")}>Désignation</Text>
+    <Text style={tw("text-center text-sm ml-6 w-20 pt-2 ")}>Qté</Text>
+    <Text style={tw("text-center text-sm pt-2 w-8  ")}>Unité</Text>
+    <Text style={tw("text-center text-sm pt-2 w-24 ")}>Prix U.HT</Text>
+    <Text style={tw("text-center text-sm pt-2 w-10 ")}>TVA</Text>
+    <Text style={tw("text-center text-sm pt-2 w-28 ")}>Total HT</Text>
   </View>
 );
 
@@ -108,7 +108,7 @@ export const DevisDocument: React.FC<{
               </View>
             </View>
           )}
-          <View style={tw("mt-5")}>
+          <View style={tw("mt-5 ")}>
             {/* Ajout de l'en-tête du tableau sur la première page */}
             <TableHeader />
             {tabValues
@@ -116,32 +116,48 @@ export const DevisDocument: React.FC<{
               .map((item, index) => (
                 <View
                   key={index}
-                  style={tw("flex flex-row justify-between p-1")}
+                  style={tw(" flex flex-row justify-between p-1")}
                   wrap={false}
                 >
-                  <Text style={tw("w-52 text-sm")}>{item.designation}</Text>
                   <Text
                     style={tw(
-                      "w-10 text-right overflow-hidden text-sm overflow-visible"
+                      "self-center  w-44 text-sm text-clip overflow-hidden"
+                    )}
+                  >
+                    {item.designation}
+                  </Text>
+                  <Text
+                    style={tw(
+                      "text-center  self-center  overflow-hidden ml-6 text-sm overflow-visible w-20"
                     )}
                   >
                     {item.quantity}
                   </Text>
-                  <Text style={tw("w-10 overflow-hidden text-sm")}>
+                  <Text
+                    style={tw(
+                      "text-center self-center  overflow-hidden text-sm w-8"
+                    )}
+                  >
                     {item.unit}
                   </Text>
                   <Text
                     style={tw(
-                      "w-10 text-right overflow-hidden text-sm whitespace-no-wrap"
+                      "text-center  self-center  overflow-hidden text-sm whitespace-no-wrap w-24"
                     )}
                   >
                     {item.priceHT + "€"}
                   </Text>
-                  <Text style={tw("w-10   text-right overflow-hidden text-sm")}>
+                  <Text
+                    style={tw(
+                      "text-center  self-center    overflow-hidden text-sm w-10"
+                    )}
+                  >
                     {item.tva + "%"}
                   </Text>
                   <Text
-                    style={tw("w-14  item-end text-right self-end  text-sm   ")}
+                    style={tw(
+                      " item-end text-right self-center  text-sm w-28  "
+                    )}
                   >
                     {item.totalHT.toFixed(2) + "€"}
                   </Text>
