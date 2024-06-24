@@ -1,20 +1,14 @@
-import React, {
-  ReactNode,
-  useState,
-  useEffect,
-  useContext,
-  MouseEvent,
-} from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./components/ui/input";
 import { PDFViewer } from "@react-pdf/renderer";
-import { DevisDocument } from "./DevisDocument";
 import Tableau from "./Tableau";
 import Acompte from "./documentsComponents/Acompte";
 import Paiements from "./documentsComponents/Paiements";
-import { DevisContexte } from "./DevisContexte";
+import { DevisProps } from "./FormDevis";
+import { FactureDocument } from "./FactureDocument";
 
 // Définir le schéma de validation avec Zod
 export const devisSchema = z.object({
@@ -53,38 +47,24 @@ type AcompteType = {
   option: string;
 };
 
-// Définir le type DevisProps
-export type DevisProps = {
-  id: number;
-  data: DevisSchema;
-  tabValues: TabValuesType[];
-  bankDetails: BankDetailsType;
-  footerValues: FooterValuesType;
-  acomptes: AcompteType[];
-};
+export const FormFacture: React.FC<{
+  initialData: DevisProps;
+}> = ({ initialData }) => {
+  const DevisID = initialData.id;
 
-export const IdGenerator = () => {
-  const now = new Date();
-  const Id = now.getTime();
-
-  return Id;
-};
-
-export const FormDevis: React.FC = () => {
-  const DevisID = IdGenerator();
-
-  const [lignes, setLignes] = useState<string[]>([]);
-  const [TabValues, setTabValues] = useState<TabValuesType[]>([]);
-  const [bankDetails, setBankDetails] = useState<BankDetailsType>({
-    iban: "",
-    companyName: "",
-  });
-  const [footerValues, setFooterValues] = useState<FooterValuesType>({
-    totalHT: 0,
-    net: 0,
-    totalTVA: 0,
-  });
-  const [acomptes, setAcomptes] = useState<AcompteType[]>([]);
+  const [lignes, setLignes] = useState<string[]>(
+    initialData.tabValues.map(() => "Nouvelle ligne")
+  );
+  const [TabValues, setTabValues] = useState<TabValuesType[]>(
+    initialData.tabValues
+  );
+  const [bankDetails, setBankDetails] = useState<BankDetailsType>(
+    initialData.bankDetails
+  );
+  const [footerValues, setFooterValues] = useState<FooterValuesType>(
+    initialData.footerValues
+  );
+  const [acomptes, setAcomptes] = useState<AcompteType[]>(initialData.acomptes);
 
   // Utiliser useForm de react-hook-form avec le résolveur zod
   const {
@@ -93,6 +73,7 @@ export const FormDevis: React.FC = () => {
     watch,
   } = useForm<DevisSchema>({
     resolver: zodResolver(devisSchema),
+    defaultValues: initialData.data,
   });
 
   const handleTabValuesChange = (index: number, field: string, value: any) => {
@@ -161,26 +142,6 @@ export const FormDevis: React.FC = () => {
   ).toFixed(2);
 
   const net = (parseFloat(totalHT) + parseFloat(totalTVA)).toFixed(2);
-
-  const { addDevis } = useContext(DevisContexte);
-
-  const handleAddDevis = (
-    event: MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
-    event.preventDefault();
-    addDevis({
-      id: DevisID,
-      data: {
-        objetDevis: watch("objetDevis"),
-        nomAffaire: watch("nomAffaire"),
-        client: watch("client"),
-      },
-      tabValues: TabValues,
-      bankDetails,
-      footerValues,
-      acomptes,
-    });
-  };
 
   return (
     <>
@@ -279,7 +240,7 @@ export const FormDevis: React.FC = () => {
           {TabValues.length > 0 ? (
             <>
               <PDFViewer className="w-full h-full rounded-r-xl ">
-                <DevisDocument
+                <FactureDocument
                   id={DevisID}
                   data={{
                     objetDevis: watch("objetDevis"),
@@ -292,14 +253,6 @@ export const FormDevis: React.FC = () => {
                   acomptes={acomptes}
                 />
               </PDFViewer>
-              <div className="flex items-center justify-end w-1/5 ">
-                <button
-                  className="p-2 m-5 mr-6 text-3xl text-white rounded-lg h-fit bg-lime-500"
-                  onClick={handleAddDevis}
-                >
-                  Finaliser le devis
-                </button>
-              </div>
             </>
           ) : (
             <p className="text-3xl">
@@ -313,22 +266,4 @@ export const FormDevis: React.FC = () => {
   );
 };
 
-export const TextClickable: React.FC<{
-  className?: string;
-  children: ReactNode;
-  textOnClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}> = ({ className, children, textOnClick }) => {
-  return (
-    <button
-      onClick={textOnClick}
-      className={
-        "m-auto my-3 text-xl font-medium w-fit focus:outline-lime-700 outline-offset-2 text-lime-600 " +
-        className
-      }
-    >
-      {children}
-    </button>
-  );
-};
-
-export default FormDevis;
+export default FormFacture;

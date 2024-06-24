@@ -5,6 +5,9 @@ import FormAvoir from "./FormAvoir";
 
 import { Button } from "./components/ui/button";
 import FormDevis from "./FormDevis";
+import DevisList from "./DevisList";
+import FormFacture from "./FormFacture";
+import SelecteurDevis from "./SelecteurDevis";
 
 type MenuProps = {
   onMenuItemClick: (item: string) => void;
@@ -70,6 +73,25 @@ const Menu: React.FC<MenuProps> = ({ onMenuItemClick }) => {
             Bon de commande
           </li>
         </Button>
+
+        <Button
+          size={"sm"}
+          className="flex justify-start group"
+          variant={"outline"}
+          asChild
+        >
+          <li
+            className="text-black/60 "
+            onClick={() => onMenuItemClick("facture")}
+          >
+            <img
+              className="w-4 mr-2 opacity-60 group-hover:opacity-100 "
+              src="./src/assets/bon-de-commande.png"
+              alt=""
+            />
+            Facture
+          </li>
+        </Button>
       </ul>
     </div>
   );
@@ -81,11 +103,22 @@ const FormView: React.FC = () => {
   const renderComponent = () => {
     switch (activeComponent) {
       case "devis":
-        return <FormDevis />;
+        return (
+          <>
+            <FormDevis />
+          </>
+        );
       case "avoir":
         return <FormAvoir />;
+      case "facture":
+        return (
+          <>
+            <SelecteurDevis />
+          </>
+        );
       case "bonDeCommande":
         return <BonDeCommande />;
+
       default:
         return (
           <div className="flex items-center justify-center w-full h-full ">
