@@ -15,7 +15,7 @@ type MenuProps = {
 
 const Menu: React.FC<MenuProps> = ({ onMenuItemClick }) => {
   return (
-    <div className="flex w-1/6 min-h-screen ml-4 border-r-2">
+    <div className="flex w-1/6 min-h-screen overflow-hidden border-r-2">
       <ul className="flex flex-col mt-1">
         <Button
           size={"sm"}
@@ -86,7 +86,7 @@ const Menu: React.FC<MenuProps> = ({ onMenuItemClick }) => {
           >
             <img
               className="w-4 mr-2 opacity-60 group-hover:opacity-100 "
-              src="./src/assets/bon-de-commande.png"
+              src="./src/assets/facture-dachat.png"
               alt=""
             />
             Facture

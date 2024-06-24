@@ -9,15 +9,15 @@ const Paiements: React.FC<{
   handleBankDetailsChange: (field: string, value: string) => void;
 }> = ({ bankDetails, handleBankDetailsChange }) => {
   return (
-    <div className="w-1/3 p-3 mt-5 border rounded-lg border-slate-200 h-fit">
+    <div className="w-1/3 p-3 mt-5 overflow-hidden border rounded-lg border-slate-200 h-fit">
       <h1 className="mb-2">Paiements</h1>
       <div className="flex flex-col items-center p-2 mb-3 border rounded-lg border-slate-200">
         <div className="flex">
           <img src="./src/assets/banque.png" className="my-auto size-6" />
           <p className="flex justify-center gap-5 p-2">Virement bancaire</p>
         </div>
-        <div className="w-full pl-20">
-          <label className="block" htmlFor="iban">
+        <div className="flex flex-col items-center justify-center w-full ">
+          <label className="text-center " htmlFor="iban">
             IBAN
           </label>
           <Input
@@ -37,8 +37,8 @@ const Paiements: React.FC<{
           />
           <p className="flex justify-center gap-5 p-2">À l'ordre de</p>
         </div>
-        <div className="w-full pl-20">
-          <label className="block" htmlFor="companyName">
+        <div className="flex flex-col items-center justify-center w-full">
+          <label className="text-center" htmlFor="companyName">
             Nom de l'entreprise
           </label>
           <Input

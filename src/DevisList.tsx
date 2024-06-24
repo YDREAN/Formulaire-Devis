@@ -10,19 +10,21 @@ const DevisList: React.FC<DevisListProps> = ({ devis, onSelectDevis }) => {
   return (
     <>
       {devis && devis.length > 0 ? (
-        <div className="w-full bg-red-100 h-52">
-          <h1 className="text-xl font-bold">Devis récents :</h1>
+        <div className="w-full p-2 h-52">
+          <h1 className="text-xl font-bold text-lime-600">Devis récents :</h1>
           {devis.map((devis, index) => (
             <div
               key={index}
-              className="flex py-2 bg-white border rounded-lg cursor-pointer"
+              className="flex items-center p-2 my-2 transition ease-in-out transform bg-white border rounded-lg cursor-pointer hover:scale-105"
               onClick={() => onSelectDevis(devis)}
             >
-              <p className="mx-4">ID : {devis.id}</p>
-              <p className="p-1 mr-2 bg-gray-200 rounded-lg">
-                {devis.data.client}
+              <p className="mx-4 text-nowrap">ID : {devis.id}</p>
+              <p className="p-1 mr-2 rounded-lg bg-lime-200 text-nowrap">
+                Client : {devis.data.client}
               </p>
-              <p className="mr-2">{devis.footerValues.net + " €"}</p>
+              <p className="mr-2 text-nowrap">
+                {devis.footerValues.net + " €"}
+              </p>
             </div>
           ))}
         </div>

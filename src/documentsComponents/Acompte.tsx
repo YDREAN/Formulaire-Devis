@@ -68,7 +68,7 @@ const Acompte: React.FC<PercentageInputProps> = ({ net, onChange }) => {
   };
 
   return (
-    <div className="w-1/3 p-3 mt-5 border rounded-lg border-slate-200 h-fit">
+    <div className="w-1/3 p-3 mt-5 overflow-hidden border rounded-lg border-slate-200 h-fit">
       <h1 className="mb-2">Acompte</h1>
 
       <div className="flex flex-col items-center justify-center space-x-2">
@@ -122,7 +122,7 @@ const Acompte: React.FC<PercentageInputProps> = ({ net, onChange }) => {
         ))}
         <Button
           onClick={handleAddAcompte}
-          className="mt-4 text-lg font-semibold bg-white focus:outline-lime-700 outline-offset-2 text-lime-600 hover:bg-white"
+          className="mt-4 text-lg font-semibold bg-white focus:outline-lime-700 outline-offset-2 text-lime-600 hover:bg-white text-wrap"
         >
           + Ajouter un acompte
         </Button>
