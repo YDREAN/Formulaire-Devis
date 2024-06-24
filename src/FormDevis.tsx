@@ -294,7 +294,7 @@ export const FormDevis: React.FC = () => {
               </PDFViewer>
               <div className="flex items-center justify-end w-1/5 ">
                 <button
-                  className="p-2 m-5 mr-6 text-3xl text-white rounded-lg h-fit bg-lime-500"
+                  className="p-2 m-5 mr-6 text-3xl text-white rounded-lg h-fit bg-lime-600"
                   onClick={handleAddDevis}
                 >
                   Finaliser le devis
