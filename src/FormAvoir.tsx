@@ -7,7 +7,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 
 import Tableau from "./Tableau";
 
-import { IdGenerator } from "./FormDevis";
+import { FooterValuesType, IdGenerator } from "./FormDevis";
 import { AvoirDocument } from "./AvoirDocument";
 
 // Définir le schéma de validation avec Zod
@@ -30,31 +30,13 @@ type TabValuesType = {
   totalHT: number;
 };
 
-type BankDetailsType = {
-  iban: string;
-  companyName: string;
-};
-
-type FooterValuesType = {
-  totalHT: number;
-  net: number;
-  totalTVA: number;
-};
-
-type AcompteType = {
-  percentage: number;
-  unit: string;
-  option: string;
-};
-
 // Définir le type DevisProps
 export type AvoirProps = {
   id: number;
   data: AvoirSchema;
   tabValues: TabValuesType[];
-  bankDetails: BankDetailsType;
+
   footerValues: FooterValuesType;
-  acomptes: AcompteType[];
 };
 
 export const FormAvoir: React.FC = () => {
