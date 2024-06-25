@@ -7,7 +7,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 import Tableau from "./Tableau";
 import Acompte from "./documentsComponents/Acompte";
 import Paiements from "./documentsComponents/Paiements";
-import { DevisProps } from "./FormDevis";
+import { DevisProps, IdGenerator } from "./FormDevis";
 import { FactureDocument } from "./FactureDocument";
 
 // Définir le schéma de validation avec Zod
@@ -51,6 +51,7 @@ export const FormFacture: React.FC<{
   initialData: DevisProps;
 }> = ({ initialData }) => {
   const DevisID = initialData.id;
+  const FactureID = IdGenerator();
 
   const [lignes, setLignes] = useState<string[]>(
     initialData.tabValues.map(() => "Nouvelle ligne")
@@ -241,7 +242,8 @@ export const FormFacture: React.FC<{
             <>
               <PDFViewer className="w-full h-full rounded-r-xl ">
                 <FactureDocument
-                  id={DevisID}
+                  id={FactureID}
+                  idDevis={DevisID}
                   data={{
                     objetDevis: watch("objetDevis"),
                     nomAffaire: watch("nomAffaire"),

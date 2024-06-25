@@ -42,12 +42,21 @@ const TableHeader = () => (
 // Create Document Component
 export const FactureDocument: React.FC<{
   id: number;
+  idDevis: number;
   data: DevisSchema;
   tabValues: TabValue[];
   bankDetails: BankDetails;
   footerValues: FooterValues;
   acomptes: Acomptes[];
-}> = ({ id, data, tabValues, bankDetails, footerValues, acomptes }) => {
+}> = ({
+  id,
+  idDevis,
+  data,
+  tabValues,
+  bankDetails,
+  footerValues,
+  acomptes,
+}) => {
   const itemsPerPage = 22; // Nombre d'éléments pouvant tenir sur une page (ajustez selon votre mise en page)
   const totalPages = Math.ceil(tabValues.length / itemsPerPage);
 
@@ -67,6 +76,9 @@ export const FactureDocument: React.FC<{
                 <Text style={tw("text-2xl self-end")}>Facture</Text>
                 <Text style={tw("text-base text-lime-600 self-end")}>
                   ID : {id}
+                </Text>
+                <Text style={tw("inline self-end text-sm")}>
+                  ID du devis : {idDevis}
                 </Text>
                 <Text style={tw("inline self-end text-sm")}>
                   Objet du devis : {data.objetDevis}
