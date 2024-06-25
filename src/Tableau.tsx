@@ -1,16 +1,10 @@
 import { useState } from "react";
 import { TextClickable } from "./FormDevis";
+import { TabValue } from "./DevisDocument";
 
 const Tableau: React.FC<{
   className?: string;
-  TabValues: {
-    designation: string;
-    quantity: number;
-    unit: string;
-    priceHT: number;
-    tva: number;
-    totalHT: number;
-  }[];
+  TabValues: TabValue[];
   handleTabValuesChange: (index: number, field: string, value: any) => void;
   handleAddLine: (e: { preventDefault: () => void }) => void;
   lignes: string[];

@@ -314,16 +314,20 @@ export const FormDevis: React.FC = () => {
 };
 
 export const TextClickable: React.FC<{
+  ThemeColor?: string;
   className?: string;
   children: ReactNode;
   textOnClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}> = ({ className, children, textOnClick }) => {
+}> = ({ ThemeColor, className, children, textOnClick }) => {
   return (
     <button
       onClick={textOnClick}
       className={
         "m-auto my-3 text-xl font-medium w-fit focus:outline-lime-700 outline-offset-2 text-lime-600 " +
-        className
+        className +
+        " text-" +
+        ThemeColor +
+        "-600"
       }
     >
       {children}

@@ -51,7 +51,7 @@ export const tw = createTw({
   },
 });
 
-const TableHeader = () => (
+export const TableHeader = () => (
   <View
     style={tw(
       "flex flex-row justify-between bg-lime-600 rounded-t-lg p-1 text-white font-bold"
