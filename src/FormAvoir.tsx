@@ -7,7 +7,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 
 import Tableau from "./Tableau";
 
-import { FooterValuesType, IdGenerator } from "./FormDevis";
+import { DateGenerator, FooterValuesType, IdGenerator } from "./FormDevis";
 import { AvoirDocument } from "./AvoirDocument";
 
 // Définir le schéma de validation avec Zod
@@ -210,6 +210,7 @@ export const FormAvoir: React.FC = () => {
               <PDFViewer className="w-full h-full rounded-r-xl ">
                 <AvoirDocument
                   id={AvoirID}
+                  date={DateGenerator()}
                   data={{
                     objetAvoir: watch("objetAvoir"),
                     nomAffaire: watch("nomAffaire"),

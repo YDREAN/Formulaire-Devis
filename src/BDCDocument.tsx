@@ -12,10 +12,11 @@ import { BDCSchema } from "./BonDeCommande";
 // Create Document Component
 export const BDCDocument: React.FC<{
   id: number;
+  date: string;
   data: BDCSchema;
   tabValues: TabValue[];
   footerValues: FooterValues;
-}> = ({ id, data, tabValues, footerValues }) => {
+}> = ({ id, date, data, tabValues, footerValues }) => {
   const itemsPerPage = 22; // Nombre d'éléments pouvant tenir sur une page (ajustez selon votre mise en page)
   const totalPages = Math.ceil(tabValues.length / itemsPerPage);
 
@@ -42,6 +43,9 @@ export const BDCDocument: React.FC<{
                 </Text>
                 <Text style={tw("self-end text-sm")}>
                   Nom de l'affaire : {data.nomAffaire}
+                </Text>
+                <Text style={tw("self-end text-sm")}>
+                  Date de création : {date}
                 </Text>
                 <View>
                   <Text style={tw(" mt-10 mb-2 border border-lime-500")}></Text>

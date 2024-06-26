@@ -7,7 +7,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 
 import Tableau from "./Tableau";
 
-import { FooterValuesType, IdGenerator } from "./FormDevis";
+import { DateGenerator, FooterValuesType, IdGenerator } from "./FormDevis";
 import { BDCDocument } from "./BDCDocument";
 
 // Définir le schéma de validation avec Zod
@@ -198,6 +198,7 @@ export const BonDeCommande: React.FC = () => {
               <PDFViewer className="w-full h-full rounded-r-xl ">
                 <BDCDocument
                   id={BDCID}
+                  date={DateGenerator()}
                   data={{
                     objetBDC: watch("objetBDC"),
                     nomAffaire: watch("nomAffaire"),

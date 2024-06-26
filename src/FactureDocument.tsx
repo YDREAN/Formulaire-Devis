@@ -42,6 +42,7 @@ const TableHeader = () => (
 // Create Document Component
 export const FactureDocument: React.FC<{
   id: number;
+  date: string;
   idDevis: number;
   data: DevisSchema;
   tabValues: TabValue[];
@@ -50,6 +51,7 @@ export const FactureDocument: React.FC<{
   acomptes: Acomptes[];
 }> = ({
   id,
+  date,
   idDevis,
   data,
   tabValues,
@@ -85,6 +87,9 @@ export const FactureDocument: React.FC<{
                 </Text>
                 <Text style={tw("self-end text-sm")}>
                   Nom de l'affaire : {data.nomAffaire}
+                </Text>
+                <Text style={tw("self-end text-sm")}>
+                  Date de création : {date}
                 </Text>
                 <View>
                   <Text style={tw(" mt-10 mb-2 border border-lime-500")}></Text>

@@ -69,12 +69,13 @@ export const TableHeader = () => (
 // Create Document Component
 export const DevisDocument: React.FC<{
   id: number;
+  date: string;
   data: DevisSchema;
   tabValues: TabValue[];
   bankDetails: BankDetails;
   footerValues: FooterValues;
   acomptes: Acomptes[];
-}> = ({ id, data, tabValues, bankDetails, footerValues, acomptes }) => {
+}> = ({ id, date, data, tabValues, bankDetails, footerValues, acomptes }) => {
   const itemsPerPage = 22; // Nombre d'éléments pouvant tenir sur une page (ajustez selon votre mise en page)
   const totalPages = Math.ceil(tabValues.length / itemsPerPage);
 
@@ -101,6 +102,9 @@ export const DevisDocument: React.FC<{
                 </Text>
                 <Text style={tw("self-end text-sm")}>
                   Nom de l'affaire : {data.nomAffaire}
+                </Text>
+                <Text style={tw("self-end text-sm")}>
+                  Date de création : {date}
                 </Text>
                 <View>
                   <Text style={tw(" mt-10 mb-2 border border-lime-500")}></Text>

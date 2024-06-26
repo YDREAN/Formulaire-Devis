@@ -62,6 +62,16 @@ export type DevisProps = {
   footerValues: FooterValuesType;
   acomptes: AcompteType[];
 };
+export const DateGenerator = () => {
+  const date = new Date();
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  return date.toLocaleDateString("fr-FR", options);
+};
 
 export const IdGenerator = () => {
   const now = new Date();
@@ -71,6 +81,7 @@ export const IdGenerator = () => {
 };
 
 export const FormDevis: React.FC = () => {
+  DateGenerator();
   const DevisID = IdGenerator();
 
   const [lignes, setLignes] = useState<string[]>([]);
@@ -281,6 +292,7 @@ export const FormDevis: React.FC = () => {
               <PDFViewer className="w-full h-full rounded-r-xl ">
                 <DevisDocument
                   id={DevisID}
+                  date={DateGenerator()}
                   data={{
                     objetDevis: watch("objetDevis"),
                     nomAffaire: watch("nomAffaire"),
