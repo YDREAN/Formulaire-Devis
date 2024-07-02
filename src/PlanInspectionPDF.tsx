@@ -1,12 +1,10 @@
-import { ReactNode } from "react"; // Assurez-vous que cette importation est correcte
 import { tw } from "./DevisDocument";
 import { Page, Text, View, Document, Image } from "@react-pdf/renderer";
 import { TableData } from "./PlanInspection";
-import { PDFDocument } from "pdf-lib";
+import { ReactNode } from "react";
 
-export const themeColor = "bg-black";
 // Composant pour créer le document PDF
-const PlanInspectionPDF = ({
+export const PlanInspectionPDF = ({
   themeColor,
   data,
 }: {
@@ -600,53 +598,27 @@ const PlanInspectionPDF = ({
             <Cellule variant="blue">PÉRIODICITÉS RETENUES</Cellule>
           </Ligne>
           <Ligne>
-            <Cellule>Récipients chapitre C</Cellule>
-            <Cellule>
-              <View style={tw("flex flex-row items-center")}>
-                <View
-                  style={tw(
-                    "w-4 h-4 border border-black mr-2 flex items-center justify-center"
-                  )}
-                >
-                  <Text>X</Text>
-                </View>
-                24 mois
-              </View>
-              <View style={tw("flex flex-row items-center mt-2")}>
-                <View
-                  style={tw(
-                    "w-4 h-4 border border-black mr-2 flex items-center justify-center"
-                  )}
-                >
-                  <Text>X</Text>
-                </View>
-                48 mois
-              </View>
+            <Cellule className="flex flex-col items-center justify-center">
+              Récipients chapitre C (24 ou 48 mois maximum selon § C.3.2 du CTP
+              " systèmes frigorifique ")
+            </Cellule>
+
+            <Cellule className="">
+              <Image src="./src/assets/CheckCheck.jpg" style={tw("w-7")} />{" "}
+              <Text>24 mois</Text>
+              <Image src="./src/assets/CheckEmpt.png" style={tw("w-7")} />{" "}
+              <Text>48 mois</Text>
             </Cellule>
           </Ligne>
           <Ligne>
-            <Cellule>Système frigorifique, le cas échéant</Cellule>
-            <Cellule>
-              <View style={tw("flex flex-row items-center")}>
-                <View
-                  style={tw(
-                    "w-4 h-4 border border-black mr-2 flex items-center justify-center"
-                  )}
-                >
-                  <Text>X</Text>
-                </View>
-                24 mois
-              </View>
-              <View style={tw("flex flex-row items-center mt-2")}>
-                <View
-                  style={tw(
-                    "w-4 h-4 border border-black mr-2 flex items-center justify-center"
-                  )}
-                >
-                  <Text>X</Text>
-                </View>
-                48 mois
-              </View>
+            <Cellule variant="blue">
+              Système frigorifique, le cas échéant
+            </Cellule>
+            <Cellule className="">
+              <Image src="./src/assets/CheckCheck.jpg" style={tw("w-7")} />{" "}
+              <Text>24 mois</Text>
+              <Image src="./src/assets/CheckEmpt.png" style={tw("w-7")} />{" "}
+              <Text>48 mois</Text>
             </Cellule>
           </Ligne>
         </Tableau>
@@ -675,56 +647,429 @@ const PlanInspectionPDF = ({
             <Cellule variant="blue">PÉRIODICITÉS RETENUES</Cellule>
           </Ligne>
           <Ligne>
-            <Cellule>Récipients</Cellule>
             <Cellule>
-              <View style={tw("flex flex-row items-center")}>
-                <View
-                  style={tw(
-                    "w-4 h-4 border border-black mr-2 flex items-center justify-center"
-                  )}
-                >
-                  <Text>X</Text>
-                </View>
-                6 ans
-              </View>
-              <View style={tw("flex flex-row items-center mt-2")}>
-                <View
-                  style={tw(
-                    "w-4 h-4 border border-black mr-2 flex items-center justify-center"
-                  )}
-                >
-                  <Text>X</Text>
-                </View>
-                12 ans
-              </View>
+              Récipients (6 ans maxi (fluide toxique) / 12 ans maxi (autres
+              fluides))
+            </Cellule>
+            <Cellule className="">
+              <Image src="./src/assets/CheckCheck.jpg" style={tw("w-7")} />{" "}
+              <Text>6 ans</Text>
+              <Image src="./src/assets/CheckEmpt.png" style={tw("w-7")} />{" "}
+              <Text>12 ans</Text>
             </Cellule>
           </Ligne>
           <Ligne>
-            <Cellule>Système frigorifique, le cas échéant</Cellule>
-            <Cellule>
-              <View style={tw("flex flex-row items-center")}>
-                <View
-                  style={tw(
-                    "w-4 h-4 border border-black mr-2 flex items-center justify-center"
-                  )}
-                >
-                  <Text>X</Text>
-                </View>
-                6 ans
-              </View>
-              <View style={tw("flex flex-row items-center mt-2")}>
-                <View
-                  style={tw(
-                    "w-4 h-4 border border-black mr-2 flex items-center justify-center"
-                  )}
-                >
-                  <Text>X</Text>
-                </View>
-                12 ans
-              </View>
+            <Cellule variant="blue">
+              Système frigorifique, le cas échéant
+            </Cellule>
+            <Cellule className="">
+              <Image src="./src/assets/CheckCheck.jpg" style={tw("w-7")} />{" "}
+              <Text>6 ans</Text>
+              <Image src="./src/assets/CheckEmpt.png" style={tw("w-7")} />{" "}
+              <Text>12 ans</Text>
             </Cellule>
           </Ligne>
         </Tableau>
+      </Page>
+      <Page renderTextLayer={false} style={tw(" p-16 text-sans")} size="A4">
+        <H2>A. VISITE INITIALE</H2>
+        <TextDoc>Périodicité : Sans</TextDoc>
+        <TextDoc>Situations imposant une Visite Initiale :</TextDoc>
+        <TextDoc>
+          - avant la date de première mise en service du système frigorifique ou
+          d’un équipement remplacé ou ajouté.
+        </TextDoc>
+        <TextDoc>- suite à une intervention importante</TextDoc>
+        <TextDoc>Qualification pour le contrôle :</TextDoc>
+        <TextDoc>
+          Personne habilitée au titre du CTP (traçabilité de la compétence)
+        </TextDoc>
+        <TextDoc>Préparation de l’équipement : selon le § A.1.4.</TextDoc>
+        <TextDoc>
+          - Sans dépose des revêtements ; accès à tous les équipements et
+          accessoires de sécurité, accès et visibilité des marques d’identité ou
+          plaques fabricant
+        </TextDoc>
+        <TextDoc>
+          Vérification de la présence (existence) du dossier d’exploitation :
+        </TextDoc>
+        <TextDoc>
+          (Existence signifie que les différents documents du dossier
+          d’exploitation ont été passés en revue. En particulier preuve de DMS
+          postérieure à 2005 ; justification de la présence de la dernière
+          requalification)
+        </TextDoc>
+
+        <H2>Options de contrôle de l’équipement :</H2>
+        <TextDoc>
+          Vérification visuelle de l’état des parties examinées du dossier
+          d’exploitation ;
+        </TextDoc>
+        <TextDoc>
+          - Contrôle visuel des parties non calorifugées lors des éventuels
+          dommages subis : chocs, déformation, corrosion ;
+        </TextDoc>
+        <TextDoc>
+          - Identification des anomalies notées : selon la notice d’instructions
+          avec une attention sur l’état et l’existence des supports par rapport
+          à leur notice d’instructions ; (absence de toute réparation non faite
+          et justifiée par l’exploitant) Vérification de la présence et de la
+          capacité à actionner toutes les soupapes de sécurité. Il s’agit de
+          vérifier :
+        </TextDoc>
+        <TextDoc>
+          {" "}
+          -- pour une soupape de décharge : L’état et la véracité des éléments
+          composant le système d’échappement n’est pas obstrué ; (montage
+          conforme à la notice d’instructions avec absence d’obstacles) ;
+        </TextDoc>
+        <TextDoc>
+          {" "}
+          -- vérification de l’intégrité de la soupape et de son dispositif ;
+          (interdiction de fonctionnement de la soupape + vérification de la
+          PDO)
+        </TextDoc>
+        <TextDoc>
+          - Vérification de l’étanchéité à la chaleur par des supports
+          calorifugés et éléments de protection. Dans le cas d’une installation,
+          suivre les instructions des points du §A.7.1 relatives aux accessoires
+          de sécurité ; (document de justification de l’adéquation, déclaration
+          CE + notice ;
+        </TextDoc>
+        <TextDoc>- Présence de dispositifs de sécurité ;</TextDoc>
+        <TextDoc>
+          - Vérification des mesures conservatoires pour protéger le personnel
+          en évitant les dangers suspectibles d’être rejetés par les dispositifs
+          de sécurité ;
+        </TextDoc>
+        <TextDoc>
+          - Vérification des preuves de surveillance par l’exploitant de la
+          vérification et au remplacement (démontage des soupapes de sécurité ;
+          les vérifier lors des inspections périodiques.
+        </TextDoc>
+        <TextDoc>
+          {" "}
+          -- Cela inclut la liste des zones d’intervention lors des inspections
+          périodiques. Ces zones d’intervention lors des inspections périodiques
+          sont situées à proximité des zones exposées aux risques de fluides
+          frigorigènes et de leur proximité de l’environnement direct ;
+        </TextDoc>
+        <TextDoc>
+          - Les zones prises en glace ou ayant un effet sur le fluide
+          frigorigène au contact des équipements (parties de l’équipement en
+          contact avec des fluides frigorifiques, les raccords hydrauliques,
+          etc.)
+        </TextDoc>
+
+        <H2>B. INSPECTIONS PERIODIQUES</H2>
+        <TextDoc>
+          Périodicité : 24 / 48 mois à définir (selon chapitres B, C, D et E.4.2
+          du CTP (périodicité unique possible sur décision de l'exploitant))
+        </TextDoc>
+        <TextDoc>
+          Qualification pour le contrôle : Personne habilitée au titre du CTP
+          (traçabilité de la compétence)
+        </TextDoc>
+        <TextDoc>
+          Préparation de l'équipement : Selon le § A.2. Sans dépose des
+          revêtements - parties amovibles retirées ; accès à tous les
+          équipements et accessoires de sécurité, accès et visibilité des
+          marques d'identité ou plaques fabricant.
+        </TextDoc>
+        <TextDoc>
+          Les zones prises en glace en conditions normales de fonctionnement
+          sont identifiées sur le circuit
+        </TextDoc>
+        <TextDoc>
+          - La liste des parties amovibles de l’isolation et les zones prises en
+          glace en conditions normales de fonctionnement sont identifiées sur un
+          schéma du circuit
+        </TextDoc>
+        <TextDoc>- Selon les dispositions du § A.2 + compléments</TextDoc>
+        <TextDoc>Vérification documentaire (dossier d’exploitation)</TextDoc>
+        <TextDoc>
+          - Permettra la présence et l’exactitude des documents ;
+        </TextDoc>
+        <TextDoc>
+          - Pénétration notamment connaissance des anomalies détectées lors de
+          la précédente échéance réglementaire, ou éventuellement survenues
+          après cette échéance réglementaire, et les mesures correctrices mises
+          en œuvre et des modifications apportées (par exemple remplacement
+          d’accessoires de sécurité, réparations, modifications sur le circuit
+          frigorifique, changement des conditions de fonctionnement, changement
+          de fluide frigorigène, changement des conditions climatiques citées
+          imposant la révision du plan d’inspection)
+        </TextDoc>
+
+        <H2>Contrôles visuels</H2>
+        <TextDoc>
+          - Pour les équipements, leurs accessoires de sécurité et leurs
+          accessoires sous pression :
+        </TextDoc>
+        <TextDoc>
+          - tout défaut de calorifuge : glace en surface ; condensation avec
+          ruissellement ; chocs externes ;
+        </TextDoc>
+        <TextDoc>
+          - tout défaut de peinture : non calorifugé : corrosion atmosphérique
+          (absence de perte d’épaisseur), chocs externes, trace de fuite de
+          frigorigène ou d’huile ;
+        </TextDoc>
+        <TextDoc>- tout défaut du supportage de l’équipement ;</TextDoc>
+        <TextDoc>- isolation de la tuyauterie : //illisible ;</TextDoc>
+
+        <H2>Contrôles des accessoires de sécurité</H2>
+        <TextDoc>
+          - Concernant ces annexes les types et modèles déclarés ou prévus à
+          l’origine ou, en cas de remplacement des accessoires de sécurité,
+          justification de l’intervention ; caractéristiques des appareils ;
+          déclaration de conformité et du tout document utile
+        </TextDoc>
+        <TextDoc>
+          - Vérification des pressions des accessoires de sécurité avec
+          conditions maximales admissibles (PS, TS) ;
+        </TextDoc>
+        <TextDoc>
+          - Vérification des pressostats de sécurité HP identifiés comme
+          accessoires de sécurité :
+        </TextDoc>
+        <TextDoc>
+          - absence de traces d’intervention sur le dispositif de réglage
+          (intégrité du plombage, du cadenassage, du point de cire, de vernis,
+          ...) ;
+        </TextDoc>
+        <TextDoc>
+          - contrôle visuel (état des contacts électriques, état des capots)
+        </TextDoc>
+        <TextDoc>- Vérification des soupapes :</TextDoc>
+        <TextDoc>- intégrité du plombage ;</TextDoc>
+        <TextDoc>
+          - contrôle visuel de l’étanchéité (le cas échéant : présence du
+          bouchon en plastique, absence de trace d’huile, indicateur de
+          décharge, ...)
+        </TextDoc>
+        <TextDoc>
+          - contrôle visuel de la non obturation de l’échappement ;
+        </TextDoc>
+
+        <H2>
+          Contrôles supplémentaires (si au moins un équipement sans
+          spécification de conception - CE) Vérification de l’état du ou des
+          condenseurs du circuit de l’absence des gaz incondensables
+        </H2>
+        <TextDoc>
+          - Lors de l’inspection périodique, l’exploitant justifie que la plus
+          ancienne des opérations marquées (*) a moins de 12 mois.
+        </TextDoc>
+
+        <H2>C. REQUALIFICATION PERIODIQUE</H2>
+        <TextDoc>Périodicité : 6/12 ans à définir</TextDoc>
+        <TextDoc>
+          (Périodicité unique possible sur décision de l'exploitant)(Pour les
+          tuyauteries, uniquement celles de catégorie III)
+        </TextDoc>
+        <TextDoc>
+          Qualification pour le contrôle : sous le contrôle d'un organisme
+          habilité accrédité
+        </TextDoc>
+        <TextDoc>
+          Préparation de l'équipement : selon le §A.3.6 - Sans dépose des
+          revêtements - parties amovibles retirées ; accès à tous les
+          équipements et accessoires de sécurité, accès et visibilité des
+          marques d'identité ou plaques fabricant.
+        </TextDoc>
+        <TextDoc>
+          Les zones prises en glace en conditions normales de fonctionnement
+          sont identifiées sur le circuit.
+        </TextDoc>
+        <TextDoc>
+          - La liste des parties amovibles de l'isolation et les zones prises en
+          glace en conditions normales de fonctionnement sont identifiées sur un
+          schéma du circuit
+        </TextDoc>
+        <TextDoc>- Selon les dispositions du § A.3 + compléments</TextDoc>
+        <TextDoc>
+          Vérification de l'existence et de l'exactitude des documents du
+          dossier d'exploitation
+        </TextDoc>
+
+        <H2>Contrôles visuels</H2>
+        <TextDoc>
+          Pour les équipements, leurs accessoires de sécurité et leurs
+          accessoires sous pression :
+        </TextDoc>
+        <TextDoc>
+          - tout défaut de calorifuge : glace en surface ; condensation avec
+          ruissellement ; chocs externes ;
+        </TextDoc>
+        <TextDoc>
+          - tout défaut de peinture : non calorifugé : corrosion atmosphérique
+          (absence de perte d'épaisseur), chocs externes, trace de fuite de
+          frigorigène ou d'huile ;
+        </TextDoc>
+        <TextDoc>- tout défaut du supportage de l'équipement ;</TextDoc>
+        <TextDoc>- isolation de la tuyauterie : //illisible ;</TextDoc>
+
+        <H2>
+          Vérification de la réalisation des contrôles prévus au plan
+          d'inspection
+        </H2>
+        <TextDoc>
+          (Contrôles prévus dans le Plan d’Inspection ou d’Exploitation)
+        </TextDoc>
+        <TextDoc>
+          Les Zones II et les Zones I contrôlées par l’exploitant au cours des
+          12 mois précédant la requalification.
+        </TextDoc>
+        <TextDoc>
+          - Cette liste est, le cas échéant, complétée par les contrôles
+          relatifs à des modes de dégradation identifiés dans le présent CTP
+          (mises propres au système frigorifique concerné.)
+        </TextDoc>
+
+        <H2>Vérification des accessoires de sécurité</H2>
+        <TextDoc>
+          Vérification des accessoires de sécurité accessibles (éléments de
+          dépose de la tuyauterie, sections de tuyauterie et parties annexes) :
+        </TextDoc>
+        <TextDoc>
+          - Contrôle visuel de l'état des accessoires de sécurité (intégrité des
+          équipements, dégradations éventuelles) :
+        </TextDoc>
+        <TextDoc>
+          - absence de traces d'intervention sur le dispositif de réglage
+          (intégrité du plombage, du cadenassage, du point de cire, de vernis,
+          ...) ;
+        </TextDoc>
+        <TextDoc>
+          - contrôle visuel (état des contacts électriques, état des capots)
+        </TextDoc>
+        <TextDoc>- Vérification des soupapes :</TextDoc>
+        <TextDoc>- intégrité du plombage ;</TextDoc>
+        <TextDoc>
+          - contrôle visuel de l'étanchéité (le cas échéant : présence du
+          bouchon en plastique, absence de trace d'huile, indicateur de
+          décharge, ...)
+        </TextDoc>
+        <TextDoc>
+          - contrôle visuel de la non obturation de l'échappement ;
+        </TextDoc>
+        <TextDoc>
+          - absence d'obstacles (cales de transport, bridages, ...) susceptibles
+          d'entraver le fonctionnement des accessoires de sécurité;
+        </TextDoc>
+        <TextDoc>
+          - vérification de la maintenance de ces accessoires de sécurité
+          (absence de fissures, corrosion, altérations, etc.)
+        </TextDoc>
+
+        <H2>Epreuve Hydraulique</H2>
+        <TextDoc>
+          L’épreuve hydraulique ne comprend pas d’épreuve hydraulique.
+        </TextDoc>
+
+        <H2>Contrôles des accessoires de sécurité</H2>
+        <TextDoc>
+          - Concernant ces annexes les types et modèles déclarés ou prévus à
+          l’origine ou, en cas de remplacement des accessoires de sécurité,
+          justification de l’intervention ; caractéristiques des appareils ;
+          déclaration de conformité et du tout document utile
+        </TextDoc>
+        <TextDoc>
+          - Vérification des pressions des accessoires de sécurité avec
+          conditions maximales admissibles (PS, TS) ;
+        </TextDoc>
+        <TextDoc>
+          - Vérification des pressostats de sécurité HP identifiés comme
+          accessoires de sécurité :
+        </TextDoc>
+        <TextDoc>
+          - absence de traces d'intervention sur le dispositif de réglage
+          (intégrité du plombage, du cadenassage, du point de cire, de vernis,
+          ...) ;
+        </TextDoc>
+        <TextDoc>
+          - contrôle visuel (état des contacts électriques, état des capots)
+        </TextDoc>
+        <TextDoc>- Vérification des soupapes :</TextDoc>
+        <TextDoc>- intégrité du plombage ;</TextDoc>
+        <TextDoc>
+          - contrôle visuel de l’étanchéité (le cas échéant : présence du
+          bouchon en plastique, absence de trace d’huile, indicateur de
+          décharge, ...)
+        </TextDoc>
+        <TextDoc>
+          - contrôle visuel de la non obturation de l’échappement ;
+        </TextDoc>
+        <TextDoc>
+          - absence d'obstacles (cales de transport, bridages, ...) susceptibles
+          d'entraver le fonctionnement des accessoires de sécurité;
+        </TextDoc>
+
+        <H2>
+          Contrôles supplémentaires (si au moins un équipement sans
+          spécification de conception - CE) Vérification de l’état du ou des
+          condenseurs du circuit de l’absence des gaz incondensables
+        </H2>
+        <TextDoc>
+          - Lors de l’inspection périodique, l’exploitant justifie que la plus
+          ancienne des opérations marquées (*) a moins de 12 mois.
+        </TextDoc>
+
+        <H2>D. CONTROLES SPECIFIQUES</H2>
+        <TextDoc>
+          Périodicité : sans - Lors du remplacement ou de la dépose de
+          l’isolation thermique
+        </TextDoc>
+        <TextDoc>
+          Qualification pour le contrôle : passage par un organisme habilité
+          accrédité ; une personne habilitée compétente (traçabilité de la
+          compétence)
+        </TextDoc>
+        <TextDoc>
+          - Lors de l’inspection, ou de la dépose de l’isolation thermique,
+          suivre les instructions des accessoires de sécurité (tuyauteries,
+          récipients, etc.)
+        </TextDoc>
+        <TextDoc>
+          - Relevés des supports et mesures des valeurs notées dans les tableaux
+          de l’analyse des accessoires de sécurité, équipements et/ou
+          tuyauteries
+        </TextDoc>
+        <TextDoc>
+          - Analyse de la notice de l’équipement : surveillance des valeurs de
+          consignes identifiées.
+        </TextDoc>
+
+        <H2>E. CRITERES D’ACCEPTATION</H2>
+        <TextDoc>
+          - Absence de zones sensibles, corrosion, fuites, dégradations et
+          défauts divers (cf. tableau des points 3 et 4 ci-dessus)
+        </TextDoc>
+        <TextDoc>
+          - Accessoires de sécurité conformes à la notice de l’équipement
+        </TextDoc>
+        <TextDoc>
+          - Absence de défauts et non-conformités sur les systèmes frigorifiques
+        </TextDoc>
+        <TextDoc>
+          - Conformité des équipements (notices et spécifications)
+        </TextDoc>
+        <TextDoc>- Absence de fuites (réfrigérant, huile, etc.)</TextDoc>
+        <TextDoc>
+          - Maintien de la pression d’essai (systèmes frigorifiques, etc.)
+        </TextDoc>
+        <TextDoc>
+          - Conformité des soudures des équipements (notice de l’équipement)
+        </TextDoc>
+        <TextDoc>
+          - Pression des accessoires de sécurité conforme à la notice de
+          l’équipement
+        </TextDoc>
+        <TextDoc>
+          - Maintien des caractéristiques de fonctionnement des équipements
+          (absence de zones sensibles, corrosion, etc.)
+        </TextDoc>
       </Page>
     </Document>
   );
@@ -820,5 +1165,3 @@ const TextDoc = ({
 }) => {
   return <Text style={tw(" text-xs  mb-2 " + className)}>{children}</Text>;
 };
-
-export default PlanInspectionPDF;

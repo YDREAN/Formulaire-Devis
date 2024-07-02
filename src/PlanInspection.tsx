@@ -3,6 +3,8 @@ import DatePicker, { registerLocale } from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale";
+import { PDFViewer } from "@react-pdf/renderer";
+import { PlanInspectionPDF } from "./PlanInspectionPDF.tsx";
 
 // Enregistrer la locale française pour le date picker
 registerLocale("fr", fr);
@@ -314,6 +316,10 @@ const PlanInspection: React.FC = () => {
           className="w-full p-2 border"
         />
       </div>
+      <PDFViewer className="w-2/3 h-screen">
+        <PlanInspectionPDF data={data} />
+      </PDFViewer>
+      <div className="Rendu"></div>
     </div>
   );
 };
