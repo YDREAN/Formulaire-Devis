@@ -1,10 +1,18 @@
 import { ReactNode } from "react"; // Assurez-vous que cette importation est correcte
 import { tw } from "./DevisDocument";
 import { Page, Text, View, Document, Image } from "@react-pdf/renderer";
+import { TableData } from "./PlanInspection";
+import { PDFDocument } from "pdf-lib";
 
 export const themeColor = "bg-black";
 // Composant pour créer le document PDF
-export const PlanInspectionPDF = ({ themeColor }: { themeColor: string }) => {
+const PlanInspectionPDF = ({
+  themeColor,
+  data,
+}: {
+  themeColor?: string;
+  data: TableData;
+}) => {
   return (
     <Document>
       <Page renderTextLayer={false} style={tw("p-2 text-sans")} size="A4">
@@ -812,3 +820,5 @@ const TextDoc = ({
 }) => {
   return <Text style={tw(" text-xs  mb-2 " + className)}>{children}</Text>;
 };
+
+export default PlanInspectionPDF;

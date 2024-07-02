@@ -1,18 +1,36 @@
 import React, { useState } from "react";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { fr } from "date-fns/locale";
+
+// Enregistrer la locale française pour le date picker
+registerLocale("fr", fr);
 
 // Définir les types pour les valeurs des champs
-interface TableData {
+export interface TableData {
+  verificationDate: Date | null;
   section3: string[];
   section4: (string | [string, string])[];
   section5: string[];
+  periodicity: {
+    months: "24 mois" | "48 mois";
+    years: "6 ans" | "12 ans";
+  };
+  annexes: File[];
 }
 
 const PlanInspection: React.FC = () => {
   // Initialiser l'état pour les valeurs des champs
   const [data, setData] = useState<TableData>({
+    verificationDate: null,
     section3: Array(4).fill(""),
     section4: ["", "", "", "", "", ["", ""], "", ""],
     section5: Array(5).fill(""),
+    periodicity: {
+      months: "24 mois",
+      years: "6 ans",
+    },
+    annexes: [],
   });
 
   // Gérer les modifications des champs de texte
@@ -47,8 +65,61 @@ const PlanInspection: React.FC = () => {
     });
   };
 
+  // Gérer les modifications de la date
+  const handleDateChange = (date: Date | null) => {
+    setData((prevData) => ({
+      ...prevData,
+      verificationDate: date,
+    }));
+  };
+
+  // Gérer les modifications des cases à cocher
+  const handlePeriodicityChange = (
+    type: "months" | "years",
+    value: "24 mois" | "48 mois" | "6 ans" | "12 ans"
+  ) => {
+    setData((prevData) => ({
+      ...prevData,
+      periodicity: {
+        ...prevData.periodicity,
+        [type]: value,
+      },
+    }));
+  };
+
+  // Gérer l'importation des fichiers PDF
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = event.target.files;
+    if (files) {
+      const pdfFiles = Array.from(files).filter(
+        (file) => file.type === "application/pdf"
+      );
+      setData((prevData) => ({
+        ...prevData,
+        annexes: [...prevData.annexes, ...pdfFiles],
+      }));
+    }
+  };
+
   return (
     <div className="w-full h-screen p-4">
+      <h1 className="mb-4 text-2xl font-bold">Plan d'Inspection</h1>
+      <div className="mb-8">
+        <label className="block mb-2 text-sm font-bold text-gray-700">
+          Date de vérification
+        </label>
+        <DatePicker
+          selected={data.verificationDate}
+          onChange={handleDateChange}
+          className="w-full p-2 border"
+          dateFormat="dd/MM/yyyy"
+          placeholderText="Sélectionnez une date"
+          locale="fr"
+        />
+      </div>
+
       <h2 className="mb-4 text-xl font-bold">
         Aménagements à la notice d'instructions du fabricant (Section 3)
       </h2>
@@ -104,7 +175,7 @@ const PlanInspection: React.FC = () => {
             {data.section4.map((value, colIndex) => (
               <td key={colIndex} className="border">
                 {Array.isArray(value) ? (
-                  <div className="flex">
+                  <div className="flex space-x-2">
                     <input
                       type="text"
                       value={value[0]}
@@ -170,6 +241,78 @@ const PlanInspection: React.FC = () => {
           </tr>
         </tbody>
       </table>
+
+      <h2 className="mt-8 mb-4 text-xl font-bold">Périodicité</h2>
+      <div className="mb-4">
+        <label className="block mb-2 text-sm font-bold text-gray-700">
+          Périodicité en mois
+        </label>
+        <div className="flex items-center mb-2">
+          <input
+            type="radio"
+            id="24mois"
+            name="periodicityMonths"
+            value="24 mois"
+            checked={data.periodicity.months === "24 mois"}
+            onChange={() => handlePeriodicityChange("months", "24 mois")}
+            className="mr-2"
+          />
+          <label htmlFor="24mois" className="mr-4">
+            24 mois
+          </label>
+          <input
+            type="radio"
+            id="48mois"
+            name="periodicityMonths"
+            value="48 mois"
+            checked={data.periodicity.months === "48 mois"}
+            onChange={() => handlePeriodicityChange("months", "48 mois")}
+            className="mr-2"
+          />
+          <label htmlFor="48mois">48 mois</label>
+        </div>
+      </div>
+      <div className="mb-8">
+        <label className="block mb-2 text-sm font-bold text-gray-700">
+          Périodicité en années
+        </label>
+        <div className="flex items-center mb-2">
+          <input
+            type="radio"
+            id="6ans"
+            name="periodicityYears"
+            value="6 ans"
+            checked={data.periodicity.years === "6 ans"}
+            onChange={() => handlePeriodicityChange("years", "6 ans")}
+            className="mr-2"
+          />
+          <label htmlFor="6ans" className="mr-4">
+            6 ans
+          </label>
+          <input
+            type="radio"
+            id="12ans"
+            name="periodicityYears"
+            value="12 ans"
+            checked={data.periodicity.years === "12 ans"}
+            onChange={() => handlePeriodicityChange("years", "12 ans")}
+            className="mr-2"
+          />
+          <label htmlFor="12ans">12 ans</label>
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <label className="block mb-2 text-sm font-bold text-gray-700">
+          Importer annexe
+        </label>
+        <input
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileUpload}
+          className="w-full p-2 border"
+        />
+      </div>
     </div>
   );
 };
