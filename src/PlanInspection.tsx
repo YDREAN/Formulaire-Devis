@@ -4,7 +4,7 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { fr } from "date-fns/locale";
 import { PDFViewer } from "@react-pdf/renderer";
-import { PlanInspectionPDF } from "./PlanInspectionPDF.tsx";
+import { PlanInspectionPDF } from "./PlanInspectionPDF";
 
 // Enregistrer la locale française pour le date picker
 registerLocale("fr", fr);
@@ -12,9 +12,9 @@ registerLocale("fr", fr);
 // Définir les types pour les valeurs des champs
 export interface TableData {
   verificationDate: Date | null;
-  section3: string[];
-  section4: (string | [string, string])[];
-  section5: string[];
+  section3: (string | [string, string] | [string, string, string])[];
+  section4: (string | [string, string] | [string, string, string])[];
+  section5: (string | [string, string] | [string, string, string])[];
   periodicity: {
     months: "24 mois" | "48 mois";
     years: "6 ans" | "12 ans";
@@ -26,9 +26,14 @@ const PlanInspection: React.FC = () => {
   // Initialiser l'état pour les valeurs des champs
   const [data, setData] = useState<TableData>({
     verificationDate: null,
-    section3: Array(4).fill(""),
+    section3: [
+      ["", ""],
+      ["", ""],
+      ["", ""],
+      ["", "", ""],
+    ],
     section4: ["", "", "", "", "", ["", ""], "", ""],
-    section5: Array(5).fill(""),
+    section5: ["", "", ["", "", ""], ["", ""], ["", ""]],
     periodicity: {
       months: "24 mois",
       years: "6 ans",
@@ -44,27 +49,19 @@ const PlanInspection: React.FC = () => {
     subIndex?: number
   ) => {
     setData((prevData) => {
-      if (section === "section3" || section === "section5") {
-        const updatedSection = prevData[section].map((val, i) =>
-          i === index ? value : val
-        );
-        return { ...prevData, [section]: updatedSection };
-      } else if (section === "section4") {
-        const updatedSection = prevData.section4.map((val, i) => {
-          if (i === index) {
-            if (Array.isArray(val)) {
-              return val.map((subVal, j) =>
-                j === subIndex ? value : subVal
-              ) as [string, string];
-            } else {
-              return value;
-            }
+      const updatedSection = prevData[section].map((val, i) => {
+        if (i === index) {
+          if (Array.isArray(val) && subIndex !== undefined) {
+            return val.map((subVal, j) =>
+              j === subIndex ? value : subVal
+            ) as typeof val;
+          } else {
+            return value;
           }
-          return val;
-        });
-        return { ...prevData, section4: updatedSection };
-      }
-      return prevData;
+        }
+        return val;
+      });
+      return { ...prevData, [section]: updatedSection };
     });
   };
 
@@ -143,14 +140,35 @@ const PlanInspection: React.FC = () => {
           <tr>
             {data.section3.map((value, colIndex) => (
               <td key={colIndex} className="border">
-                <input
-                  type="text"
-                  value={value}
-                  onChange={(e) =>
-                    handleChange("section3", colIndex, e.target.value)
-                  }
-                  className="w-full p-2 border"
-                />
+                {Array.isArray(value) ? (
+                  <div className="flex space-x-2">
+                    {value.map((subValue, subIndex) => (
+                      <input
+                        key={subIndex}
+                        type="text"
+                        value={subValue}
+                        onChange={(e) =>
+                          handleChange(
+                            "section3",
+                            colIndex,
+                            e.target.value,
+                            subIndex
+                          )
+                        }
+                        className="w-full p-2 border"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <input
+                    type="text"
+                    value={value}
+                    onChange={(e) =>
+                      handleChange("section3", colIndex, e.target.value)
+                    }
+                    className="w-full p-2 border"
+                  />
+                )}
               </td>
             ))}
           </tr>
@@ -179,22 +197,22 @@ const PlanInspection: React.FC = () => {
               <td key={colIndex} className="border">
                 {Array.isArray(value) ? (
                   <div className="flex space-x-2">
-                    <input
-                      type="text"
-                      value={value[0]}
-                      onChange={(e) =>
-                        handleChange("section4", colIndex, e.target.value, 0)
-                      }
-                      className="w-1/2 p-2 border"
-                    />
-                    <input
-                      type="text"
-                      value={value[1]}
-                      onChange={(e) =>
-                        handleChange("section4", colIndex, e.target.value, 1)
-                      }
-                      className="w-1/2 p-2 border"
-                    />
+                    {value.map((subValue, subIndex) => (
+                      <input
+                        key={subIndex}
+                        type="text"
+                        value={subValue}
+                        onChange={(e) =>
+                          handleChange(
+                            "section4",
+                            colIndex,
+                            e.target.value,
+                            subIndex
+                          )
+                        }
+                        className="w-full p-2 border"
+                      />
+                    ))}
                   </div>
                 ) : (
                   <input
@@ -231,14 +249,35 @@ const PlanInspection: React.FC = () => {
           <tr>
             {data.section5.map((value, colIndex) => (
               <td key={colIndex} className="border">
-                <input
-                  type="text"
-                  value={value}
-                  onChange={(e) =>
-                    handleChange("section5", colIndex, e.target.value)
-                  }
-                  className="w-full p-2 border"
-                />
+                {Array.isArray(value) ? (
+                  <div className="flex space-x-2">
+                    {value.map((subValue, subIndex) => (
+                      <input
+                        key={subIndex}
+                        type="text"
+                        value={subValue}
+                        onChange={(e) =>
+                          handleChange(
+                            "section5",
+                            colIndex,
+                            e.target.value,
+                            subIndex
+                          )
+                        }
+                        className="w-full p-2 border"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <input
+                    type="text"
+                    value={value}
+                    onChange={(e) =>
+                      handleChange("section5", colIndex, e.target.value)
+                    }
+                    className="w-full p-2 border"
+                  />
+                )}
               </td>
             ))}
           </tr>
@@ -303,6 +342,14 @@ const PlanInspection: React.FC = () => {
           />
           <label htmlFor="12ans">12 ans</label>
         </div>
+      </div>
+      <div className="w-full">
+        <button
+          onClick={() => console.log(data)}
+          className="p-2 border border-black"
+        >
+          Data
+        </button>
       </div>
 
       <div className="mb-8">
