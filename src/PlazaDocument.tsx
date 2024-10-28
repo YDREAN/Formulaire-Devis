@@ -15,6 +15,7 @@ type PlazaValues = {
   total: number;
   moyenDePaiement: string;
   fraisDePorts: number;
+  signature: string | null;
 };
 
 export const tw = createTw({
@@ -68,7 +69,7 @@ export const PlazaDocument: React.FC<{
         >
           {pageIndex === 0 && (
             <>
-              <View style={tw("flex flex-row justify-between bg-red-200")}>
+              <View style={tw("flex flex-row justify-between")}>
                 <View style={tw("flex flex-row items-center")}>
                   <Image src="./src/assets/Plaza.jpeg" style={tw("w-44")} />
                   <View>
@@ -90,25 +91,6 @@ export const PlazaDocument: React.FC<{
                     SIRET : 97780068900027
                   </Text>
                 </View>
-
-                {/*<View style={tw(" flex flex-col bg-blue-200")}>
-                <Text style={tw("text-base text-red-900 self-end")}>
-                  ID: {id}
-                </Text>
-                <Text style={tw("inline self-end text-sm")}>
-                  Objet du devis : {data.objetDevis}
-                </Text>
-                <Text style={tw("self-end text-sm")}>
-                  Nom de l'affaire : {data.nomAffaire}
-                </Text>
-                <Text style={tw("self-end text-sm")}>
-                  Date de création : {date}
-                </Text>
-                <View>
-                  <Text style={tw(" mt-10 mb-2 border border-red-500")}></Text>
-                  <Text style={tw(" text-sm")}>Client : {data.donneur}</Text>
-                </View>
-              </View>*/}
               </View>
               <View style={tw("flex flex-row")}>
                 <Text style={tw("  border-b-4 border-red-400 w-1/2")}></Text>
@@ -131,7 +113,7 @@ export const PlazaDocument: React.FC<{
               </View>
             </>
           )}
-          <View style={tw("mt-5 ")}>
+          <View style={tw("mt-5 mx-8")}>
             {/* Ajout de l'en-tête du tableau sur la première page */}
             <TableHeader />
             {tabValues
@@ -182,7 +164,7 @@ export const PlazaDocument: React.FC<{
               <Text>{plazaValues.total} Euros</Text> dont{" "}
               <Text>{plazaValues.fraisDePorts}</Text> euros de frais de ports.
             </Text>
-            <Text>
+            <Text style={tw("mt-4")}>
               Le paiement à été effectué par{" "}
               <Text>{plazaValues.moyenDePaiement}</Text>.
             </Text>
@@ -191,8 +173,16 @@ export const PlazaDocument: React.FC<{
             </Text>
           </View>
           <View style={tw("flex flex-row justify-between text-sm my-4 mx-8")}>
-            <Text>Signature de l'acheteur</Text>
-            <Text>Signature du vendeur</Text>
+            <View style={tw("")}>
+              <Text>Signature de l'acheteur :</Text>{" "}
+              {plazaValues.signature && (
+                <Image
+                  src={plazaValues.signature}
+                  style={{ width: 150, height: 70 }}
+                />
+              )}
+            </View>
+            <Text>Signature du vendeur :</Text>
           </View>
         </Page>
       ))}

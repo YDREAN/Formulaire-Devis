@@ -89,7 +89,7 @@ export const PlazaLigneTab: React.FC<{
       <td className="designation max-w-10" onClick={handleTextClick}>
         {isEditing ? (
           <input
-            className="bg-lime-200 focus:outline-none"
+            className="bg-red-100 focus:outline-none"
             type="text"
             value={designation}
             onChange={(e) => setDesignation(e.target.value)}

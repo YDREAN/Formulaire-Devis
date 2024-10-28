@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,6 +6,8 @@ import { Input } from "./components/ui/input";
 import { PDFViewer } from "@react-pdf/renderer";
 import PlazaTableau from "./PlazaTableau";
 import { PlazaDocument } from "./PlazaDocument";
+import SignatureCanvas from "react-signature-canvas";
+import { Button } from "./components/ui/button";
 
 // Définir le schéma de validation avec Zod
 export const devisSchema = z.object({
@@ -30,6 +32,7 @@ export type PlazaValuesType = {
   total: number;
   moyenDePaiement: string;
   fraisDePorts: number;
+  signature: string | null;
 };
 
 // Définir le type DevisProps
@@ -63,6 +66,7 @@ export const PlazaTCG: React.FC = () => {
     total: 0,
     moyenDePaiement: "",
     fraisDePorts: 0,
+    signature: null,
   });
 
   // Utiliser useForm de react-hook-form avec le résolveur zod
@@ -73,6 +77,8 @@ export const PlazaTCG: React.FC = () => {
   } = useForm<DevisSchema>({
     resolver: zodResolver(devisSchema),
   });
+
+  const sigCanvas = useRef<SignatureCanvas>(null);
 
   const handleTabValuesChange = (index: number, field: string, value) => {
     setTabValues((prev) => {
@@ -119,6 +125,10 @@ export const PlazaTCG: React.FC = () => {
       "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " + plazaValues.dateDeNaissance
     );
   };
+  const saveSignature = () => {
+    const signature = sigCanvas.current?.toDataURL("image/png");
+    setPlazaValues((prev) => ({ ...prev, signature }));
+  };
 
   const total = TabValues.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -136,51 +146,70 @@ export const PlazaTCG: React.FC = () => {
               <p className="text-sm text-red-500">{errors.objet.message}</p>
             )}
           </div>
-
-          <div className="my-3">
-            <label htmlFor="nomAffaire">Nom Affaire</label>
-            <Input id="nomAffaire" {...register("nomAffaire")} />
-            {errors.nomAffaire && (
-              <p className="text-sm text-red-500">
-                {errors.nomAffaire.message}
-              </p>
-            )}
+          <div className="flex justify-between gap-4 ">
+            {" "}
+            <div className="w-full my-3">
+              <label htmlFor="donneur">Donneur</label>
+              <Input id="donneur" {...register("donneur")} />
+              {errors.donneur && (
+                <p className="text-sm text-red-500">{errors.donneur.message}</p>
+              )}
+            </div>
+            <div className="w-full my-3 ">
+              <label htmlFor="dateDeNaissance">Date de Naissance</label>
+              <Input
+                id="dateDeNaissance"
+                type="text" // Reste sous format texte
+                onChange={(e) => handlePlazaValueChange(e, "dateDeNaissance")}
+              />
+            </div>
           </div>
 
-          <div className="my-3">
-            <label htmlFor="donneur">Donneur</label>
-            <Input id="donneur" {...register("donneur")} />
-            {errors.donneur && (
-              <p className="text-sm text-red-500">{errors.donneur.message}</p>
-            )}
+          <div className="flex justify-between gap-4 ">
+            <div className="w-full my-3">
+              <label htmlFor="moyenDePaiement">Moyen de Paiement</label>
+              <Input
+                id="moyenDePaiement"
+                type="text"
+                onChange={(e) => handlePlazaValueChange(e, "moyenDePaiement")}
+              />
+            </div>
+
+            <div className="w-full my-3">
+              <label htmlFor="fraisDePorts">Frais de Ports</label>
+              <Input
+                id="fraisDePorts"
+                type="number"
+                onChange={(e) => handlePlazaValueChange(e, "fraisDePorts")}
+              />
+            </div>
           </div>
 
-          {/* Nouveaux champs pour plazaValues */}
-          <div className="my-3 ">
-            <label htmlFor="dateDeNaissance">Date de Naissance</label>
-            <Input
-              id="dateDeNaissance"
-              type="text" // Reste sous format texte
-              onChange={(e) => handlePlazaValueChange(e, "dateDeNaissance")}
-            />
-          </div>
+          {/* Canevas de signature */}
+          <div className="my-5 ">
+            <label>Signature</label>
+            <div className="border border-black rounded-lg w-fit">
+              <SignatureCanvas
+                ref={sigCanvas}
+                penColor="black"
+                canvasProps={{
+                  width: 500,
+                  height: 200,
+                  className: "sigCanvas",
+                }}
+              />
+            </div>
 
-          <div className="my-3">
-            <label htmlFor="moyenDePaiement">Moyen de Paiement</label>
-            <Input
-              id="moyenDePaiement"
-              type="text"
-              onChange={(e) => handlePlazaValueChange(e, "moyenDePaiement")}
-            />
-          </div>
-
-          <div className="my-3">
-            <label htmlFor="fraisDePorts">Frais de Ports</label>
-            <Input
-              id="fraisDePorts"
-              type="number"
-              onChange={(e) => handlePlazaValueChange(e, "fraisDePorts")}
-            />
+            <Button className="m-2 " type="button" onClick={saveSignature}>
+              Enregistrer la signature
+            </Button>
+            <Button
+              className="m-2 "
+              type="button"
+              onClick={() => sigCanvas.current?.clear()}
+            >
+              Effacer la signature
+            </Button>
           </div>
 
           <div className="mt-5">
