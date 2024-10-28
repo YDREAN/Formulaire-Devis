@@ -1,23 +1,15 @@
-import React, {
-  ReactNode,
-  useState,
-  useEffect,
-  useContext,
-  MouseEvent,
-} from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./components/ui/input";
 import { PDFViewer } from "@react-pdf/renderer";
-import Tableau from "./Tableau";
-import { DevisContexte } from "./DevisContexte";
 import PlazaTableau from "./PlazaTableau";
 import { PlazaDocument } from "./PlazaDocument";
 
 // Définir le schéma de validation avec Zod
 export const devisSchema = z.object({
-  objet: z.string().min(1, "Objet  est requis"),
+  objet: z.string().min(1, "Objet est requis"),
   nomAffaire: z.string().min(1, "Nom affaire est requis"),
   donneur: z.string().min(1, "Un donneur est requis"),
 });
@@ -33,18 +25,22 @@ export type PlazaTabValuesType = {
   total: number;
 };
 
-export type FooterValuesType = {
+export type PlazaValuesType = {
+  dateDeNaissance: string;
   total: number;
+  moyenDePaiement: string;
+  fraisDePorts: number;
 };
 
 // Définir le type DevisProps
-export type DevisProps = {
+export type PlazaProps = {
   id: number;
   data: DevisSchema;
   tabValues: PlazaTabValuesType[];
 
-  footerValues: FooterValuesType;
+  plazaValues: PlazaValuesType;
 };
+
 export const DateGenerator = () => {
   const date = new Date();
   const options: Intl.DateTimeFormatOptions = {
@@ -56,22 +52,17 @@ export const DateGenerator = () => {
   return date.toLocaleDateString("fr-FR", options);
 };
 
-export const IdGenerator = () => {
-  const now = new Date();
-  const Id = now.getTime();
-
-  return Id;
-};
-
-export const FormPlazaTCG: React.FC = () => {
+export const PlazaTCG: React.FC = () => {
   DateGenerator();
-  const DevisID = IdGenerator();
 
   const [lignes, setLignes] = useState<string[]>([]);
   const [TabValues, setTabValues] = useState<PlazaTabValuesType[]>([]);
 
-  const [footerValues, setFooterValues] = useState<FooterValuesType>({
+  const [plazaValues, setPlazaValues] = useState<PlazaValuesType>({
+    dateDeNaissance: "jj/mm/aaaa",
     total: 0,
+    moyenDePaiement: "",
+    fraisDePorts: 0,
   });
 
   // Utiliser useForm de react-hook-form avec le résolveur zod
@@ -83,7 +74,7 @@ export const FormPlazaTCG: React.FC = () => {
     resolver: zodResolver(devisSchema),
   });
 
-  const handleTabValuesChange = (index: number, field: string, value: any) => {
+  const handleTabValuesChange = (index: number, field: string, value) => {
     setTabValues((prev) => {
       const newValues = [...prev];
       newValues[index] = { ...newValues[index], [field]: value };
@@ -115,15 +106,24 @@ export const FormPlazaTCG: React.FC = () => {
       0
     );
 
-    setFooterValues({ total: total });
+    setPlazaValues((prev) => ({ ...prev, total }));
   }, [TabValues]);
+
+  const handlePlazaValueChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: keyof PlazaValuesType
+  ) => {
+    const value = e.target.value; // Pas de conversion en Date
+    setPlazaValues((prev) => ({ ...prev, [field]: value }));
+    console.log(
+      "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " + plazaValues.dateDeNaissance
+    );
+  };
 
   const total = TabValues.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   ).toFixed(2);
-
-  const { addDevis } = useContext(DevisContexte);
 
   return (
     <>
@@ -153,6 +153,34 @@ export const FormPlazaTCG: React.FC = () => {
             {errors.donneur && (
               <p className="text-sm text-red-500">{errors.donneur.message}</p>
             )}
+          </div>
+
+          {/* Nouveaux champs pour plazaValues */}
+          <div className="my-3 ">
+            <label htmlFor="dateDeNaissance">Date de Naissance</label>
+            <Input
+              id="dateDeNaissance"
+              type="text" // Reste sous format texte
+              onChange={(e) => handlePlazaValueChange(e, "dateDeNaissance")}
+            />
+          </div>
+
+          <div className="my-3">
+            <label htmlFor="moyenDePaiement">Moyen de Paiement</label>
+            <Input
+              id="moyenDePaiement"
+              type="text"
+              onChange={(e) => handlePlazaValueChange(e, "moyenDePaiement")}
+            />
+          </div>
+
+          <div className="my-3">
+            <label htmlFor="fraisDePorts">Frais de Ports</label>
+            <Input
+              id="fraisDePorts"
+              type="number"
+              onChange={(e) => handlePlazaValueChange(e, "fraisDePorts")}
+            />
           </div>
 
           <div className="mt-5">
@@ -189,7 +217,7 @@ export const FormPlazaTCG: React.FC = () => {
                     donneur: watch("donneur"),
                   }}
                   tabValues={TabValues}
-                  footerValues={footerValues}
+                  plazaValues={plazaValues} // Ajout de plazaValues
                 ></PlazaDocument>
               </PDFViewer>
             </>
@@ -204,23 +232,3 @@ export const FormPlazaTCG: React.FC = () => {
     </>
   );
 };
-
-export const TextClickable: React.FC<{
-  className?: string;
-  children: ReactNode;
-  textOnClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}> = ({ className, children, textOnClick }) => {
-  return (
-    <button
-      onClick={textOnClick}
-      className={
-        "m-auto my-3 text-xl font-medium w-fit focus:outline-lime-700 outline-offset-2 text-lime-600 " +
-        className
-      }
-    >
-      {children}
-    </button>
-  );
-};
-
-export default FormPlazaTCG;

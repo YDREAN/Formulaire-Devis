@@ -1,17 +1,20 @@
 import React from "react";
-import { Link, Page, Text, View, Document, Image } from "@react-pdf/renderer";
+import { Page, Text, View, Document, Image } from "@react-pdf/renderer";
 import { createTw } from "react-pdf-tailwind";
 import { PlazaTabValuesType } from "./PlazaTCG";
 
 // Type DevisSchema
 type DevisSchema = {
-  objetDevis: string;
+  objet: string;
   nomAffaire: string;
   donneur: string;
 };
 
-type FooterValues = {
+type PlazaValues = {
+  dateDeNaissance: string;
   total: number;
+  moyenDePaiement: string;
+  fraisDePorts: number;
 };
 
 export const tw = createTw({
@@ -44,13 +47,12 @@ const TableHeader = () => (
 
 // Create Document Component
 export const PlazaDocument: React.FC<{
-  id: number;
   date: string;
   data: DevisSchema;
   tabValues: PlazaTabValuesType[];
 
-  footerValues: FooterValues;
-}> = ({ id, date, data, tabValues, footerValues }) => {
+  plazaValues: PlazaValues;
+}> = ({ date, data, tabValues, plazaValues }) => {
   const itemsPerPage = 22; // Nombre d'éléments pouvant tenir sur une page (ajustez selon votre mise en page)
   const totalPages = Math.ceil(tabValues.length / itemsPerPage);
 
@@ -117,7 +119,8 @@ export const PlazaDocument: React.FC<{
                 <Text style={tw(" mb-4  ")}>
                   Je soussigné{" "}
                   <Text style={tw(" font-bold ")}>{data.donneur}</Text>, né le{" "}
-                  {data.birthday},certifie sur l'honneur avoir cédé à la société{" "}
+                  {plazaValues.dateDeNaissance},certifie sur l'honneur avoir
+                  cédé à la société{" "}
                   <Text style={tw(" font-bold ")}>PLAZA TCG </Text> (SIRET :
                   97780068900027) et dont le siège social est situé au{" "}
                   <Text style={tw(" ")}>
@@ -176,10 +179,12 @@ export const PlazaDocument: React.FC<{
           <View style={tw("text-sm my-4 mx-8")}>
             <Text style={tw("")}>
               Le matériel ci-dessus a été vendu pour la somme de{" "}
-              <Text>{footerValues.total} Euros</Text> dont <Text>footer</Text>
+              <Text>{plazaValues.total} Euros</Text> dont{" "}
+              <Text>{plazaValues.fraisDePorts}</Text> euros de frais de ports.
             </Text>
             <Text>
-              Le paiement à été effectué par <Text>Paypal</Text>
+              Le paiement à été effectué par{" "}
+              <Text>{plazaValues.moyenDePaiement}</Text>.
             </Text>
             <Text style={tw("text-right")}>
               Fait le <Text>{date}</Text>
