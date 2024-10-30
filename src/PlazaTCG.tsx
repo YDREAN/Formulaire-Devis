@@ -3,31 +3,30 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./components/ui/input";
-import { PDFViewer } from "@react-pdf/renderer";
+import { PDFViewer, pdf } from "@react-pdf/renderer";
 import PlazaTableau from "./PlazaTableau";
 import { PlazaDocument } from "./PlazaDocument";
 import SignatureCanvas from "react-signature-canvas";
 import { Button } from "./components/ui/button";
+import { PDFDocument } from "pdf-lib";
+import { saveAs } from "file-saver";
 
-// Définir le schéma de validation avec Zod
+// Schéma de validation et types de données
 export const devisSchema = z.object({
   objet: z.string().min(1, "Objet est requis"),
   nomAffaire: z.string().min(1, "Nom affaire est requis"),
   donneur: z.string().min(1, "Un donneur est requis"),
 });
 
-// Définir le type basé sur le schéma de validation
 type DevisSchema = z.infer<typeof devisSchema>;
-
-// Définir les types pour les autres propriétés
-export type PlazaTabValuesType = {
+type PlazaTabValuesType = {
   designation: string;
   quantity: number;
   price: number;
   total: number;
 };
 
-export type PlazaValuesType = {
+type PlazaValuesType = {
   dateDeNaissance: string;
   total: number;
   moyenDePaiement: string;
@@ -35,7 +34,6 @@ export type PlazaValuesType = {
   signature: string | null;
 };
 
-// Définir le type DevisProps
 export type PlazaProps = {
   id: number;
   data: DevisSchema;
@@ -51,16 +49,13 @@ export const DateGenerator = () => {
     month: "long",
     day: "numeric",
   };
-
   return date.toLocaleDateString("fr-FR", options);
 };
 
 export const PlazaTCG: React.FC = () => {
-  DateGenerator();
-
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [lignes, setLignes] = useState<string[]>([]);
   const [TabValues, setTabValues] = useState<PlazaTabValuesType[]>([]);
-
   const [plazaValues, setPlazaValues] = useState<PlazaValuesType>({
     dateDeNaissance: "jj/mm/aaaa",
     total: 0,
@@ -69,7 +64,6 @@ export const PlazaTCG: React.FC = () => {
     signature: null,
   });
 
-  // Utiliser useForm de react-hook-form avec le résolveur zod
   const {
     register,
     formState: { errors },
@@ -119,12 +113,10 @@ export const PlazaTCG: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     field: keyof PlazaValuesType
   ) => {
-    const value = e.target.value; // Pas de conversion en Date
+    const value = e.target.value;
     setPlazaValues((prev) => ({ ...prev, [field]: value }));
-    console.log(
-      "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " + plazaValues.dateDeNaissance
-    );
   };
+
   const saveSignature = () => {
     const signature = sigCanvas.current?.toDataURL("image/png");
     setPlazaValues((prev) => ({ ...prev, signature }));
@@ -134,6 +126,68 @@ export const PlazaTCG: React.FC = () => {
     (sum, item) => sum + item.price * item.quantity,
     0
   ).toFixed(2);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === "application/pdf") {
+      setUploadedFile(file);
+    } else {
+      alert("Veuillez sélectionner un fichier PDF.");
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!uploadedFile) {
+      alert("Veuillez uploader un fichier PDF à fusionner.");
+      return;
+    }
+
+    // Créer le document `PlazaDocument` en PDF
+    const plazaDoc = (
+      <PlazaDocument
+        id={0}
+        date={new Date().toLocaleDateString("fr-FR")}
+        data={{
+          objet: watch("objet"),
+          nomAffaire: watch("nomAffaire"),
+          donneur: watch("donneur"),
+        }}
+        tabValues={TabValues}
+        plazaValues={plazaValues}
+      />
+    );
+    const asPdf = pdf();
+    asPdf.updateContainer(plazaDoc);
+    const plazaBlob = await asPdf.toBlob();
+
+    // Fusion des PDFs
+    const plazaPdfBytes = await plazaBlob.arrayBuffer();
+    const uploadedPdfBytes = await uploadedFile.arrayBuffer();
+    const plazaPdfDoc = await PDFDocument.load(plazaPdfBytes);
+    const uploadedPdfDoc = await PDFDocument.load(uploadedPdfBytes);
+    const mergedPdfDoc = await PDFDocument.create();
+
+    // Ajout des pages du document `PlazaDocument`
+    const plazaPages = await mergedPdfDoc.copyPages(
+      plazaPdfDoc,
+      plazaPdfDoc.getPageIndices()
+    );
+    plazaPages.forEach((page) => mergedPdfDoc.addPage(page));
+
+    // Ajout des pages du fichier uploadé
+    const uploadedPages = await mergedPdfDoc.copyPages(
+      uploadedPdfDoc,
+      uploadedPdfDoc.getPageIndices()
+    );
+    uploadedPages.forEach((page) => mergedPdfDoc.addPage(page));
+
+    // Enregistrement et téléchargement du PDF fusionné
+    const mergedPdfBytes = await mergedPdfDoc.save();
+    const mergedPdfBlob = new Blob([mergedPdfBytes], {
+      type: "application/pdf",
+    });
+    saveAs(mergedPdfBlob, `Document_Fusionne.pdf`);
+  };
 
   return (
     <>
@@ -147,7 +201,6 @@ export const PlazaTCG: React.FC = () => {
             )}
           </div>
           <div className="flex justify-between gap-4 ">
-            {" "}
             <div className="w-full my-3">
               <label htmlFor="donneur">Donneur</label>
               <Input id="donneur" {...register("donneur")} />
@@ -159,7 +212,7 @@ export const PlazaTCG: React.FC = () => {
               <label htmlFor="dateDeNaissance">Date de Naissance</label>
               <Input
                 id="dateDeNaissance"
-                type="text" // Reste sous format texte
+                type="text"
                 onChange={(e) => handlePlazaValueChange(e, "dateDeNaissance")}
               />
             </div>
@@ -211,6 +264,22 @@ export const PlazaTCG: React.FC = () => {
             </Button>
           </div>
 
+          <div className="my-5 ">
+            <label>Télécharger sa pièce d'identité</label>
+            <div className="rounded-lg w-fit">
+              <input
+                type="file"
+                accept="application/pdf"
+                className="w-full mt-4"
+                onChange={handleFileUpload}
+              />
+            </div>
+          </div>
+
+          <Button className="m-2" type="button" onClick={handleDownload}>
+            Télécharger PDF Fusionné
+          </Button>
+
           <div className="mt-5">
             <PlazaTableau
               TabValues={TabValues}
@@ -245,7 +314,7 @@ export const PlazaTCG: React.FC = () => {
                     donneur: watch("donneur"),
                   }}
                   tabValues={TabValues}
-                  plazaValues={plazaValues} // Ajout de plazaValues
+                  plazaValues={plazaValues}
                 ></PlazaDocument>
               </PDFViewer>
             </>
@@ -260,3 +329,5 @@ export const PlazaTCG: React.FC = () => {
     </>
   );
 };
+
+export default PlazaTCG;
