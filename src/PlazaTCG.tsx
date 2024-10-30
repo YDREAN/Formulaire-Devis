@@ -186,7 +186,7 @@ export const PlazaTCG: React.FC = () => {
           </div>
 
           {/* Canevas de signature */}
-          <div className="my-5 ">
+          {/*<div className="my-5 ">
             <label>Signature</label>
             <div className="border border-black rounded-lg w-fit">
               <SignatureCanvas
@@ -210,7 +210,7 @@ export const PlazaTCG: React.FC = () => {
             >
               Effacer la signature
             </Button>
-          </div>
+          </div>*/}
 
           <div className="mt-5">
             <PlazaTableau
