@@ -101,7 +101,7 @@ export const PlazaDocument: React.FC<{
                 <Text style={tw(" mb-4  ")}>
                   Je soussigné{" "}
                   <Text style={tw(" font-bold ")}>{data.donneur}</Text>, né le{" "}
-                  {plazaValues.dateDeNaissance},certifie sur l'honneur avoir
+                  {plazaValues.dateDeNaissance}, certifie sur l'honneur avoir
                   cédé à la société{" "}
                   <Text style={tw(" font-bold ")}>PLAZA TCG </Text> (SIRET :
                   97780068900027) et dont le siège social est situé au{" "}
@@ -174,7 +174,7 @@ export const PlazaDocument: React.FC<{
           </View>
           <View style={tw("flex flex-row justify-between text-sm my-4 mx-8")}>
             <View style={tw("")}>
-              <Text>Signature de l'acheteur :</Text>{" "}
+              <Text>Signature du vendeur :</Text>{" "}
               {plazaValues.signature && (
                 <Image
                   src={plazaValues.signature}
@@ -182,7 +182,7 @@ export const PlazaDocument: React.FC<{
                 />
               )}
             </View>
-            <Text>Signature du vendeur :</Text>
+            <Text>Signature de l'acheteur :</Text>
           </View>
         </Page>
       ))}

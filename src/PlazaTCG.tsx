@@ -133,6 +133,7 @@ export const PlazaTCG: React.FC = () => {
       setUploadedFile(file);
     } else {
       alert("Veuillez sélectionner un fichier PDF.");
+      return;
     }
   };
 
