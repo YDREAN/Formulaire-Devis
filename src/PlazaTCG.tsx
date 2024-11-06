@@ -38,7 +38,6 @@ export type PlazaProps = {
   id: number;
   data: DevisSchema;
   tabValues: PlazaTabValuesType[];
-
   plazaValues: PlazaValuesType;
 };
 
@@ -54,6 +53,7 @@ export const DateGenerator = () => {
 
 export const PlazaTCG: React.FC = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [lignes, setLignes] = useState<string[]>([]);
   const [TabValues, setTabValues] = useState<PlazaTabValuesType[]>([]);
   const [plazaValues, setPlazaValues] = useState<PlazaValuesType>({
@@ -128,18 +128,26 @@ export const PlazaTCG: React.FC = () => {
   ).toFixed(2);
 
   const handleFileUpload = (event) => {
+    setUploadedFile(null); // Réinitialise le fichier PDF
+    setUploadedImages([]); // Réinitialise les images
     const file = event.target.files[0];
     if (file && file.type === "application/pdf") {
       setUploadedFile(file);
-    } else {
-      alert("Veuillez sélectionner un fichier PDF.");
-      return;
     }
   };
 
+  const handleImageUpload = (event) => {
+    setUploadedImages([]); // Réinitialise les images
+    const files = Array.from(event.target.files);
+    const imageFiles = files.filter((file) =>
+      ["image/jpeg", "image/png"].includes(file.type)
+    );
+    setUploadedImages((prev) => [...prev, ...imageFiles]);
+  };
+
   const handleDownload = async () => {
-    if (!uploadedFile) {
-      alert("Veuillez uploader un fichier PDF à fusionner.");
+    if (!uploadedFile && uploadedImages.length === 0) {
+      alert("Veuillez uploader un fichier PDF ou des images.");
       return;
     }
 
@@ -157,15 +165,13 @@ export const PlazaTCG: React.FC = () => {
         plazaValues={plazaValues}
       />
     );
+
     const asPdf = pdf();
     asPdf.updateContainer(plazaDoc);
     const plazaBlob = await asPdf.toBlob();
 
-    // Fusion des PDFs
     const plazaPdfBytes = await plazaBlob.arrayBuffer();
-    const uploadedPdfBytes = await uploadedFile.arrayBuffer();
     const plazaPdfDoc = await PDFDocument.load(plazaPdfBytes);
-    const uploadedPdfDoc = await PDFDocument.load(uploadedPdfBytes);
     const mergedPdfDoc = await PDFDocument.create();
 
     // Ajout des pages du document `PlazaDocument`
@@ -175,12 +181,51 @@ export const PlazaTCG: React.FC = () => {
     );
     plazaPages.forEach((page) => mergedPdfDoc.addPage(page));
 
-    // Ajout des pages du fichier uploadé
-    const uploadedPages = await mergedPdfDoc.copyPages(
-      uploadedPdfDoc,
-      uploadedPdfDoc.getPageIndices()
-    );
-    uploadedPages.forEach((page) => mergedPdfDoc.addPage(page));
+    // Ajout des pages du fichier PDF uploadé
+    if (uploadedFile) {
+      const uploadedPdfBytes = await uploadedFile.arrayBuffer();
+      const uploadedPdfDoc = await PDFDocument.load(uploadedPdfBytes);
+      const uploadedPages = await mergedPdfDoc.copyPages(
+        uploadedPdfDoc,
+        uploadedPdfDoc.getPageIndices()
+      );
+      uploadedPages.forEach((page) => mergedPdfDoc.addPage(page));
+    }
+
+    // Conversion de toutes les images en un seul PDF, ajustant la largeur au format PDF
+    if (uploadedImages.length > 0) {
+      const imagePdfDoc = await PDFDocument.create();
+      const pdfPageWidth = 595; // Largeur d'une page A4 en points
+
+      for (const imageFile of uploadedImages) {
+        const imgBytes = await imageFile.arrayBuffer();
+        const img =
+          imageFile.type === "image/png"
+            ? await imagePdfDoc.embedPng(imgBytes)
+            : await imagePdfDoc.embedJpg(imgBytes);
+
+        const scaleRatio = pdfPageWidth / img.width;
+        const page = imagePdfDoc.addPage([
+          pdfPageWidth,
+          img.height * scaleRatio,
+        ]);
+        page.drawImage(img, {
+          x: 0,
+          y: 0,
+          width: pdfPageWidth,
+          height: img.height * scaleRatio,
+        });
+      }
+
+      const imagePdfBytes = await imagePdfDoc.save();
+      const imagePdfDocToMerge = await PDFDocument.load(imagePdfBytes);
+
+      const imagePages = await mergedPdfDoc.copyPages(
+        imagePdfDocToMerge,
+        imagePdfDocToMerge.getPageIndices()
+      );
+      imagePages.forEach((page) => mergedPdfDoc.addPage(page));
+    }
 
     // Enregistrement et téléchargement du PDF fusionné
     const mergedPdfBytes = await mergedPdfDoc.save();
@@ -240,46 +285,20 @@ export const PlazaTCG: React.FC = () => {
           </div>
 
           <div className="my-5 ">
-            <label>Signature</label>
-            <div className="border border-black rounded-lg w-fit">
-              <SignatureCanvas
-                ref={sigCanvas}
-                penColor="black"
-                canvasProps={{
-                  width: 500,
-                  height: 200,
-                  className: "sigCanvas",
-                }}
-              />
-            </div>
-
-            <Button className="m-2 " type="button" onClick={saveSignature}>
-              Enregistrer la signature
-            </Button>
-            <Button
-              className="m-2 "
-              type="button"
-              onClick={() => sigCanvas.current?.clear()}
-            >
-              Effacer la signature
-            </Button>
-          </div>
-
-          <div className="my-5 ">
-            <label>Télécharger sa pièce d'identité</label>
+            <label>Télécharger une pièce d'identité (PDF ou image)</label>
             <div className="rounded-lg w-fit">
               <input
                 type="file"
-                accept="application/pdf"
                 className="w-full mt-4"
-                onChange={handleFileUpload}
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={(event) => {
+                  handleFileUpload(event);
+                  handleImageUpload(event);
+                }}
+                multiple // Permet de sélectionner plusieurs images
               />
             </div>
           </div>
-
-          <Button className="m-2" type="button" onClick={handleDownload}>
-            Télécharger PDF Fusionné
-          </Button>
 
           <div className="mt-5">
             <PlazaTableau
@@ -301,7 +320,39 @@ export const PlazaTCG: React.FC = () => {
             </div>
           </div>
         </form>
-
+        <div className="my-5 ">
+          <label>Signature</label>
+          <div className="border border-black rounded-lg w-fit">
+            <SignatureCanvas
+              ref={sigCanvas}
+              penColor="black"
+              canvasProps={{
+                width: 500,
+                height: 200,
+                className: "sigCanvas",
+              }}
+            />
+          </div>
+          <div className="flex justify-between flex-shrink">
+            <Button
+              className="flex-shrink m-2 "
+              type="button"
+              onClick={saveSignature}
+            >
+              Enregistrer la signature
+            </Button>
+            <Button
+              className="flex-shrink m-2 "
+              type="button"
+              onClick={() => sigCanvas.current?.clear()}
+            >
+              Effacer la signature
+            </Button>
+          </div>
+        </div>
+        <Button className="w-4/5 " type="button" onClick={handleDownload}>
+          Télécharger PDF Fusionné
+        </Button>
         <div className="flex justify-center w-full h-screen mt-5 overflow-hidden pdfView ">
           {TabValues.length > 0 ? (
             <>
