@@ -146,35 +146,6 @@ export const PlazaTCG: React.FC = () => {
     setUploadedImages((prev) => [...prev, ...imageFiles]);
   };
 
-  // Initialisation de EmailJS
-  emailjs.init("wrVac-7ERDY9cq5AS"); // Remplacez par votre USER_ID
-
-  // Fonction de conversion Blob -> base64
-  const convertBlobToBase64 = (blob: Blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
-
-  // Fonction d'envoi d'email avec pièce jointe
-  const sendEmailWithAttachment = async (pdfBlob: Blob) => {
-    try {
-      const pdfBase64 = await convertBlobToBase64(pdfBlob);
-      const templateParams = {
-        to_name: "yanndrean1@gmail.com",
-        from_name: "zorrozorreo@gmail.com",
-        message: "Veuillez trouver ci-joint le document PDF fusionné.",
-      };
-      await emailjs.send("service_51tn8r4", "template_vquugtq", templateParams);
-      alert("Email envoyé avec succès !");
-    } catch (error) {
-      console.error("Erreur lors de l'envoi de l'email:", error);
-    }
-  };
-
   const handleDownload = async () => {
     if (!uploadedFile && uploadedImages.length === 0) {
       alert("Veuillez uploader un fichier PDF ou des images.");
@@ -263,7 +234,7 @@ export const PlazaTCG: React.FC = () => {
     });
 
     saveAs(mergedPdfBlob, `Document_Fusionne.pdf`);
-    sendEmailWithAttachment(mergedPdfBlob); // Envoi de l'email avec pièce jointe
+    // Envoi de l'email avec pièce jointe
   };
 
   return (

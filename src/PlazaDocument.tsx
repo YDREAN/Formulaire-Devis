@@ -81,13 +81,13 @@ export const PlazaDocument: React.FC<{
                 </View>
                 <View>
                   <Text style={tw("text-2xl self-end")}>Plaza TCG</Text>
-                  <Text style={tw("text-lg opacity-50 italic text-right")}>
-                    21/22 BOULEVARD DE LA MUETTE
+                  <Text style={tw("text-lg opacity-50   self-end")}>
+                    21/23 BOULEVARD DE LA MUETTE
                   </Text>
-                  <Text style={tw("text-lg opacity-50 italic text-end")}>
+                  <Text style={tw("text-lg opacity-50   self-end")}>
                     95140 GARGES LES GONESSE
                   </Text>
-                  <Text style={tw("text-lg opacity-50 italic text-right ")}>
+                  <Text style={tw("text-lg opacity-50   self-end")}>
                     SIRET : 97780068900027
                   </Text>
                 </View>
@@ -182,7 +182,15 @@ export const PlazaDocument: React.FC<{
                 />
               )}
             </View>
-            <Text>Signature de l'acheteur :</Text>
+
+            <View>
+              <Text>Signature de l'acheteur :</Text>
+              <Image
+                src="./src/assets/PlazaSignature.png"
+                style={{ width: 150, height: 70 }}
+              />
+              <Text style={tw("text-xs self-end -top-6")}>{date}</Text>
+            </View>
           </View>
         </Page>
       ))}
